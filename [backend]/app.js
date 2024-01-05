@@ -24,6 +24,6 @@ app.use('/*', (req,res)=>{
 
 
 //Start Server
-app.listen(PORT, ()=>{
-    console.log(`Server running on port ${PORT}`)
+app.listen(PORT || 5000, ()=>{
+    console.log(`Server running on port ${PORT || 5000}`)
 })

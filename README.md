@@ -16,7 +16,7 @@ You may also see any lint errors in the console.
 
 ### `npm start-server`
 
-Runs the server in the development mode on Global PORT and renders the frontend in the browser.\
+Runs the build script and then runs the server in the development mode on Global PORT. The frontend will be rendered in the browser.\
 Global PORT defaults to 5000
 Open [http://localhost:5000](http://localhost:5000) to view it in your browser.
 

@@ -2,11 +2,12 @@ const { Op } = require("sequelize")
 const Park = require("../models/parks")
 const { sequelize } = require("../../sequelize")
 const Trails = require("../models/trails")
+const ParkReviews = require("../models/parkReview")
 
 exports.getAllParks=async(req,res)=>{
     try{
         console.log("Retrieving Parks")
-        const parks = await Park.findAll({include:{model:Trails}})
+        const parks = await Park.findAll({include:[Trails, ParkReviews]})
         console.log("Parks Retrieved Successfully")
         res.json(parks)
     }catch(err){
@@ -77,7 +78,7 @@ exports.editPark = async(req, res)=>{
 exports.deletePark= async(req,res)=>{
     try {
         console.log(`Destroying park with id ${req.params.id}`)
-        const park = await Park.destroy({where:{id:req.params.id}})
+        const park = await Park.findOne({where:{id:req.params.id}})
         //If park does not exist
         if(!park){
             console.log("Park not found")
@@ -85,6 +86,7 @@ exports.deletePark= async(req,res)=>{
             return
         }
         //If Park does exist
+        await park.destroy()
         res.status(200).json("Successfully Deleted Park")
     } catch (error) {
         console.warn("ERROR DELETING PARK:", error)

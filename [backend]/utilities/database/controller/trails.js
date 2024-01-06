@@ -34,7 +34,7 @@ exports.getTrailsById=async(req, res)=>{
 exports.addTrails = async (req, res)=>{
    try {
     console.log("Creating New Trail")
-    let trail = await Trails.findOne({where: {name:{[Op.like]:`${req.body.name}`}, parkId:{[Op.like]:`${req.params.id}`} }})
+    let trail = await Trails.findOne({where: {name:{[Op.like]:`${req.body.name}`}, ParkId:`${req.params.id}`}})
     // Check to see if Trails already exists
     if(trail) {
         console.log("Trail is Already in Database")
@@ -43,7 +43,7 @@ exports.addTrails = async (req, res)=>{
     }
     //Create Trails if one does not exist
     console.log(`Adding ${req.body.name} to the database`)
-    trail = await Trails.create({...req.body, parkId:req.params.id})  
+    trail = await Trails.create({...req.body, ParkId:req.params.id})  
     console.log(`${trail.name} added to database`)  
     res.status(200).json(trail)
    } catch (error) {

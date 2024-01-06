@@ -1,7 +1,9 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../../sequelize');
-const { User } = require('./users');
 const Trails = require('./trails');
+const ParkReviews = require('./parkReview');
+
+
 
 
 const Parks = sequelize.define('Parks', {   
@@ -54,10 +56,14 @@ const Parks = sequelize.define('Parks', {
     createdBy: {
         type:DataTypes.UUID,
         references:{
-            model:User,
+            model:'Users',
             key:'id'
         }
     }
 })
-Parks.hasMany(Trails)
+
+Parks.hasMany(Trails, {foreignKey:'ParkId',onDelete:'CASCADE'})
+Parks.hasMany(ParkReviews, {foreignKey:'ParkId',onDelete:'CASCADE'})
+Trails.belongsTo(Parks,{foreignKey:'ParkId',})
+ParkReviews.belongsTo(Parks, {foreignKey:'ParkId',})
 module.exports = Parks 

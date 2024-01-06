@@ -2,19 +2,17 @@ const {Sequelize} = require('sequelize')
 const path = require('path')
 
 
-const DB_PATH = path.join(__dirname, 'database','trails.db')
-const sequelize = new Sequelize({
-    dialect:'sqlite',
-    storage:DB_PATH,
+
+const sequelize = new Sequelize('postgres://admin:Thebigdawgisawesome!@localhost:5432/trail_finder',{   
     logging: false,
-    alter:true
+    
 })
 
 const connectToDatabase=async()=>{
     try {              
         await sequelize.authenticate();
-        await sequelize.sync()
-        console.log('Connection has been established successfully.');
+        await sequelize.sync({alter:true})
+        console.log('Connection to database has been established successfully.');
       } catch (error) {
         console.error('Unable to connect to the database:', error);
       }

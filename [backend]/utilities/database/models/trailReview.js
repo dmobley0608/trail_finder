@@ -1,7 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../sequelize");
-const { User } = require("./users");
-const { Trail } = require("./trail");
+
 
 
 const TrailReview = sequelize.define('TrailReview', {
@@ -11,18 +10,20 @@ const TrailReview = sequelize.define('TrailReview', {
             notEmpty:true
         }
     },
-    trail:{
+    trailId:{
+        type:DataTypes.INTEGER,
         references:{
-            model:Trail,
+            model:'Trails',
             key:'id'
         }
     },
     createdBy:{
+        type:DataTypes.UUID,
         references:{
-            model:User,
+            model:'Users',
             key:'id'
         }
     }
 })
 
-module.exports = {TrailReview}
+module.exports = TrailReview

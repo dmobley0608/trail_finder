@@ -1,28 +1,29 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../sequelize");
-const Park = require("./parks");
-const { User } = require("./users");
 
 
-const ParkReview = sequelize.define('ParkReview', {
+
+const ParkReviews = sequelize.define('ParkReviews', {
     body:{
         type:DataTypes.STRING,
         validate:{
             notEmpty:true
         }
     },
-    park:{
+    parkId:{
+        type:DataTypes.UUID,
         references:{
-            model:Park,
+            model:'Parks',
             key:'id'
         }
     },
     createdBy:{
+        type:DataTypes.UUID,
         references:{
-            model:User,
+            model:'Users',
             key:'id'
         }
     }
 })
 
-module.exports = {ParkReview}
+module.exports = ParkReviews

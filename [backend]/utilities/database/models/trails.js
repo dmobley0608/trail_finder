@@ -1,7 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../sequelize");
-const Parks = require("./parks");
-const { User } = require("./users");
+
 
 
 const Trails = sequelize.define('Trails', {
@@ -18,17 +17,17 @@ const Trails = sequelize.define('Trails', {
             max:5
         }
     },
-    parkId:{
+    ParkId:{
         type:DataTypes.UUID,
         references:{
-            model:Parks,
+            model:'Parks',
             key:'id'
         }
     },
     createdBy:{
         type:DataTypes.UUID,
         references:{
-            model:User,
+            model:'Users',
             key:'id'
         }
     }

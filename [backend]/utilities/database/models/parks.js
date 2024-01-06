@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../../sequelize');
+const { User } = require('./users');
 
 
 const Park = sequelize.define('Park', {
@@ -29,10 +30,31 @@ const Park = sequelize.define('Park', {
     },
     zip: DataTypes.STRING,
     phone: DataTypes.STRING,
+    rating:{
+        type:DataTypes.FLOAT,
+        defaultValue:1,
+        validate:{
+            min:1,
+            max:5
+        }
+    },
     url: {
         type:DataTypes.STRING,
         validate:{
             isUrl:true
+        }
+    },
+    description:{
+        type:DataTypes.STRING,
+        validate:{
+            notEmpty:true
+        }
+    },
+    createdBy: {
+        type:DataTypes.UUID,
+        references:{
+            model:User,
+            key:'id'
         }
     }
 })

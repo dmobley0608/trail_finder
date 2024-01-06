@@ -2,10 +2,10 @@ const { Op } = require("sequelize")
 const Trails = require("../models/trails")
 const { sequelize } = require("../../sequelize")
 
-exports.getAllTrails=async(req,res)=>{
+exports.getTrailsByPark=async(req,res)=>{
     try{
         console.log("Retrieving Trails By Park")
-        const trails = await Trails.findAll()
+        const trails = await Trails.findAll({where:{parkId:req.params.parkId}})
         console.log("Trailss Retrieved Successfully")
         res.json(trails)
     }catch(err){
@@ -34,7 +34,7 @@ exports.getTrailsById=async(req, res)=>{
 exports.addTrails = async (req, res)=>{
    try {
     console.log("Creating New Trail")
-    let trail = await Trails.findOne({where: {name:{[Op.like]:`${req.body.name}`}, parkId:{[Op.like]:`${req.params.park}`} }})
+    let trail = await Trails.findOne({where: {name:{[Op.like]:`${req.body.name}`}, parkId:{[Op.like]:`${req.params.id}`} }})
     // Check to see if Trails already exists
     if(trail) {
         console.log("Trail is Already in Database")
@@ -43,7 +43,7 @@ exports.addTrails = async (req, res)=>{
     }
     //Create Trails if one does not exist
     console.log(`Adding ${req.body.name} to the database`)
-    trail = await Trails.create({...req.body})  
+    trail = await Trails.create({...req.body, parkId:req.params.id})  
     console.log(`${trail.name} added to database`)  
     res.status(200).json(trail)
    } catch (error) {

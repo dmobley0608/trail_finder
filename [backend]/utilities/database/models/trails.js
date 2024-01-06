@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../sequelize");
-const Park = require("./parks");
+const Parks = require("./parks");
 const { User } = require("./users");
 
 
@@ -18,10 +18,10 @@ const Trails = sequelize.define('Trails', {
             max:5
         }
     },
-    park:{
+    parkId:{
         type:DataTypes.UUID,
         references:{
-            model:Park,
+            model:Parks,
             key:'id'
         }
     },
@@ -34,4 +34,4 @@ const Trails = sequelize.define('Trails', {
     }
 })
 
-module.exports = Trails
+module.exports = Trails 

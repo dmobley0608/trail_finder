@@ -1,9 +1,10 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../../sequelize');
 const { User } = require('./users');
+const Trails = require('./trails');
 
 
-const Park = sequelize.define('Park', {   
+const Parks = sequelize.define('Parks', {   
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
@@ -58,5 +59,5 @@ const Park = sequelize.define('Park', {
         }
     }
 })
-
-module.exports = Park 
+Parks.hasMany(Trails)
+module.exports = Parks 

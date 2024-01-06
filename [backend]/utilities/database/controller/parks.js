@@ -1,11 +1,12 @@
 const { Op } = require("sequelize")
 const Park = require("../models/parks")
 const { sequelize } = require("../../sequelize")
+const Trails = require("../models/trails")
 
 exports.getAllParks=async(req,res)=>{
     try{
         console.log("Retrieving Parks")
-        const parks = await Park.findAll()
+        const parks = await Park.findAll({include:{model:Trails}})
         console.log("Parks Retrieved Successfully")
         res.json(parks)
     }catch(err){

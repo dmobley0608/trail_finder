@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 //Routes
-app.use('/parks', ParkRouter )
+app.use('/api/parks', ParkRouter )
 
 //Forward to frontend
 app.use('/*', (req,res)=>{
@@ -28,4 +28,4 @@ app.use('/*', (req,res)=>{
 //Start Server
 app.listen(PORT || 5000, ()=>{
     console.log(`Server running on port ${PORT || 5000}`)
-})
+}) 

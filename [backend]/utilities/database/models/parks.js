@@ -3,7 +3,7 @@ const { sequelize } = require('../../sequelize');
 const { User } = require('./users');
 
 
-const Park = sequelize.define('Park', {
+const Park = sequelize.define('Park', {   
     id: {
         type: DataTypes.UUID,
         primaryKey: true,

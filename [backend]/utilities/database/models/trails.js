@@ -4,7 +4,7 @@ const Park = require("./parks");
 const { User } = require("./users");
 
 
-const Trail = sequelize.define('Trail', {
+const Trails = sequelize.define('Trails', {
     name:DataTypes.STRING,
     length:DataTypes.FLOAT,
     color:DataTypes.STRING,
@@ -34,4 +34,4 @@ const Trail = sequelize.define('Trail', {
     }
 })
 
-module.exports = {Trail}
+module.exports = Trails

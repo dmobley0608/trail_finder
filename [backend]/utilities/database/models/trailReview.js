@@ -17,7 +17,7 @@ const TrailReviews = sequelize.define('TrailReviews', {
             key:'id'
         }
     },
-    createdBy:{
+    UserId:{
         type:DataTypes.UUID,
         references:{
             model:'Users',

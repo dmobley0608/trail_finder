@@ -5,6 +5,7 @@ const path = require('path')
 
 const sequelize = new Sequelize('postgres://admin:Thebigdawgisawesome!@localhost:5432/trail_finder',{   
     logging: false,
+    dialect:'postgres'
     
 })
 

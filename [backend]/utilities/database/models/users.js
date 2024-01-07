@@ -1,5 +1,10 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../sequelize");
+const Parks = require("./parks");
+const ParkReviews = require("./parkReview");
+const TrailReviews = require("./trailReview");
+const Trails = require("./trails");
+
 
 
 const Users = sequelize.define('Users', {
@@ -27,6 +32,7 @@ const Users = sequelize.define('Users', {
     email:{
         type:DataTypes.STRING,
         allowNull:false,
+        unique:true,
         validate:{
             notEmpty:true,
             isEmail:true
@@ -42,8 +48,16 @@ const Users = sequelize.define('Users', {
     },
     role:{
         type:DataTypes.ENUM('ADMIN', 'USER'),
-        defaultValue:'ADMIN'
+        defaultValue:'USER'
     }
 })
+
+Users.hasMany(Parks, {onDelete:'SET NULL'})
+Parks.belongsTo(Users)
+Users.hasMany(ParkReviews, {onDelete:'CASCADE'})
+ParkReviews.belongsTo(Users)
+Users.hasMany(Trails, {onDelete:'SET NULL'})
+Users.hasMany(TrailReviews, {onDelete:'CASCADE'})
+TrailReviews.belongsTo(Users)
 
 module.exports=Users

@@ -35,7 +35,7 @@ exports.addParkReview = async (req, res)=>{
    try {
     console.log("Creating New Park Review")      
     console.log(`Adding ${req.body.name} to the database`)
-    let review  = await ParkReviews.create({...req.body, ParkId:req.params.id})  
+    let review  = await ParkReviews.create({...req.body, ParkId:req.params.id, UserId:req.user.id})  
     console.log(`Park Review added to database`)  
     res.status(200).json(review)
    } catch (error) {

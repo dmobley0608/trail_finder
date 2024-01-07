@@ -53,7 +53,7 @@ const Parks = sequelize.define('Parks', {
             notEmpty:true
         }
     },
-    createdBy: {
+    UserId: {
         type:DataTypes.UUID,
         references:{
             model:'Users',

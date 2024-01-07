@@ -10,14 +10,14 @@ const ParkReviews = sequelize.define('ParkReviews', {
             notEmpty:true
         }
     },
-    parkId:{
+    ParkId:{
         type:DataTypes.UUID,
         references:{
             model:'Parks',
             key:'id'
         }
     },
-    createdBy:{
+    UserId:{
         type:DataTypes.UUID,
         references:{
             model:'Users',

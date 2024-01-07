@@ -3,14 +3,14 @@ const { sequelize } = require("../../sequelize");
 
 
 
-const TrailReview = sequelize.define('TrailReview', {
+const TrailReviews = sequelize.define('TrailReviews', {
     body:{
         type:DataTypes.STRING,
         validate:{
             notEmpty:true
         }
     },
-    trailId:{
+    TrailId:{
         type:DataTypes.INTEGER,
         references:{
             model:'Trails',
@@ -26,4 +26,4 @@ const TrailReview = sequelize.define('TrailReview', {
     }
 })
 
-module.exports = TrailReview
+module.exports = TrailReviews

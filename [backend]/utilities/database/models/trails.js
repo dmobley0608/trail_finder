@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../sequelize");
+const TrailReviews = require("./trailReview");
 
 
 
@@ -33,4 +34,6 @@ const Trails = sequelize.define('Trails', {
     }
 })
 
+Trails.hasMany(TrailReviews, {foreignKey:'TrailId', onDelete:'CASCADE'})
+TrailReviews.belongsTo(Trails)
 module.exports = Trails 

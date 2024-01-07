@@ -5,6 +5,7 @@ const { connectToDatabase } = require('./utilities/sequelize')
 const ParkRouter = require('./routes/parks')
 const TrailRouter = require('./routes/trails')
 const ParkReviewRouter = require('./routes/parkReviews')
+const TrailReviewRouter = require('./routes/trailReviews')
 //GLOBAL VARIABLES
 const PORT = 5000
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/parks', ParkRouter )
 app.use('/api/trails', TrailRouter)
 app.use('/api/park-reviews', ParkReviewRouter)
+app.use('/api/trail-reviews', TrailReviewRouter)
 //Forward to frontend
 app.use('/*', (req,res)=>{
     res.sendFile("index.html", {root: path.join(__dirname,"../build")})

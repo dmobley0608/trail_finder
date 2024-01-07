@@ -1,7 +1,11 @@
 import React from 'react'
 import ParkSearchBar from '../../components/parkSearchBar/parkSearchBar'
+import { parksApi, useGetAllParksQuery } from '../../redux/parksApi'
+
 
 export default function Homepage() {
+    const {data = [], error, isLoading} = useGetAllParksQuery()
+    console.log(data)
     return (
         <div className='border w-full min-h-dvh'>
             <section id="hero">
@@ -18,6 +22,16 @@ export default function Homepage() {
             </section>
             <h2 className='text-xl font-bold'>Featured Parks</h2>
             <hr/>
+            <section>
+                {data.map(park=>(
+                    <div key={park.id} className='mt-2 border-y flex flex-col'>
+                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcSlgdyby0yUYw0svm_Q97gArVD9rBgThWww&usqp=CAU' alt='park'/>
+                        <p className='text-lg font-bold uppercase'>{park.name}</p>
+                        <p>{park.streetAddress}</p>
+                        <p>{park.state}</p>
+                    </div>
+                ))}
+            </section>
         </div>
     )
 }

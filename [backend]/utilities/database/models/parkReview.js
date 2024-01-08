@@ -10,6 +10,7 @@ const ParkReviews = sequelize.define('ParkReviews', {
             notEmpty:true
         }
     },
+    date:DataTypes.DATE,
     ParkId:{
         type:DataTypes.UUID,
         references:{

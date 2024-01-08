@@ -53,6 +53,8 @@ const Parks = sequelize.define('Parks', {
             notEmpty:true
         }
     },
+    parkingFee:DataTypes.FLOAT,
+    horseFee:DataTypes.FLOAT,
     UserId: {
         type:DataTypes.UUID,
         references:{

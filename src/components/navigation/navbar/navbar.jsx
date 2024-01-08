@@ -1,9 +1,10 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Link, NavLink } from 'react-router-dom'
 
 const navigation = [
-    { name: 'Home', href: '#', current: true },
+    { name: 'Home', href: '/', current: true },
     { name: 'Parks', href: '#', current: false },
     { name: 'About', href: '#', current: false },
     { name: 'Plan A Ride', href: '#', current: false },
@@ -15,7 +16,7 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
-    const user = 'null';
+    const user = null;
     return (
         <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10">
             {({ open }) => (
@@ -62,7 +63,7 @@ export default function Navbar() {
                                 </div>
                                 {/* if user is not logged in */}
                                 {!user &&
-                                    <a href="/login" className='hidden sm:flex text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium ml-auto'>
+                                    <a href="/signin" className='hidden sm:flex text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium ml-auto'>
                                         Sign In
                                     </a>
                                 }
@@ -141,25 +142,19 @@ export default function Navbar() {
 
                     </div>
 
-                    <Disclosure.Panel className="sm:hidden">
-                        <div className="space-y-1 px-2 pb-3 pt-2">
-                            {navigation.map((item) => (
-                                <Disclosure.Button
-                                    key={item.name}
-                                    as="a"
-                                    href={item.href}
-                                    className={classNames(
-                                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                        'block rounded-md px-3 py-2 text-base font-medium'
-                                    )}
-                                    aria-current={item.current ? 'page' : undefined}
-                                >
-                                    {item.name}
-                                </Disclosure.Button>
-                            ))}
-                            {!user && <Disclosure.Button href="/login"
-                                className='text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium w-full'>
-                                Sign In
+                    <Disclosure.Panel className="sm:hidden ">
+                        <div className="space-y-1 px-2 pb-3 pt-2 border">
+                            <Disclosure.Button as={NavLink} to="/"
+                                className={({ isActive }) => isActive ? 'bg-blue-200 text-black rounded px-6' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'}>
+                                Home
+
+                            </Disclosure.Button>
+
+
+                            {!user && <Disclosure.Button as={NavLink} to="/signin"
+                                className={({ isActive }) => isActive ? 'bg-blue-200 text-black rounded px-6' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'}>
+                                Sign In/Register
+
                             </Disclosure.Button>
                             }
                         </div>

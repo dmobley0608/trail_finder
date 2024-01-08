@@ -8,9 +8,9 @@ export default function Homepage() {
     
     return (
         <div className='border w-full'>
-            <div id="hero" className='sticky top-0'>
-                <div className='relative shadow-lg'>
-                    <h1 className='text-3xl text-white font-extrabold tracking-widest absolute top-[50%] right-0 left-0'>Trail Finder</h1>
+            <div id="hero" className=''>
+                <div className='shadow-lg relative'>
+                    <h1 className='text-3xl text-white font-extrabold tracking-widest absolute top-[50%] left-0 right-0'>Trail Finder</h1>
                     <div className=''>
                         <img className='' src='https://www.atlantatrails.com/wp-content/uploads/2019/02/atlantas-best-hiking-trails-our-top-10-favorite-hikes.jpg' alt='trail' />
                     </div>

@@ -27,7 +27,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-client": "react-scripts start",
     "start-server": "react-scripts build && npm install nodemon && cd [backend] && nodemon app.js",
     "dev-server": "cd [backend] && nodemon app.js",
     "build": "react-scripts build",

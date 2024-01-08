@@ -1,5 +1,6 @@
 //Imports
 const express = require('express')
+require('dotenv').config()
 const path = require('path')
 const { connectToDatabase } = require('./utilities/sequelize')
 const session = require('express-session')
@@ -15,7 +16,7 @@ const PORT = 5000
 
 //Initiliaze app
 const app = express()
-app.use(express.static(path.join(__dirname, "..", "build")))
+app.use(express.static(path.join(__dirname, "..", "build"))) 
 app.use(express.static("public"))
 
 //Body Parser
@@ -25,7 +26,7 @@ app.use(express.urlencoded({ extended: true }))
 //Session Management
 app.use(session({
     store: new (require('connect-pg-simple')(session))({
-        conString: 'postgres://admin:Thebigdawgisawesome!@localhost:5432/trail_finder',
+        conString: process.env.DATABASE_CONNECTION_STRING,
         tableName: 'session'
     }),   
     secret: 'temp-secret',

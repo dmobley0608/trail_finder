@@ -46,10 +46,7 @@ const Users = sequelize.define('Users', {
             min:8
         }
     },
-    role:{
-        type:DataTypes.ENUM('ADMIN', 'USER'),
-        defaultValue:'USER'
-    }
+    role:DataTypes.STRING
 })
 
 Users.hasMany(Parks, {onDelete:'SET NULL'})

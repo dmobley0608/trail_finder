@@ -8,7 +8,7 @@ const Trails = sequelize.define('Trails', {
     name:DataTypes.STRING,
     length:DataTypes.FLOAT,
     color:DataTypes.STRING,
-    difficulty:DataTypes.ENUM('EASY','MODERATE', 'CHALLENGING', 'RIGOROUS' ),
+    difficulty:DataTypes.STRING,
     description:DataTypes.STRING,
     rating:{
         type:DataTypes.FLOAT,

@@ -22,7 +22,7 @@ exports.getUserById=async(req,res)=>{
 exports.createUser=async(req, res)=>{
     try {
         const hashedPassword = await hashPassword(req.body.password)       
-        const user = await Users.create({...req.body, password:hashedPassword})
+        const user = await Users.create({...req.body, password:hashedPassword, role:'USER'})
         if(!user){
             console.log('ERROR CREATING USER')
             res.status(400).json("ERROR CREATING USER")

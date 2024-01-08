@@ -10,7 +10,7 @@ const TrailReviews = sequelize.define('TrailReviews', {
             notEmpty:true
         }
     },
-    date:DataTypes.DATE,
+    date:DataTypes.DATEONLY,
     TrailId:{
         type:DataTypes.INTEGER,
         references:{

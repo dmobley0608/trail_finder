@@ -16,7 +16,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 ))
 function App() {
   return (
-    <div className="App min-h-dvh max-w-dvw relative">     
+    <div className="App">     
       <RouterProvider router={router} />
     </div>
   );

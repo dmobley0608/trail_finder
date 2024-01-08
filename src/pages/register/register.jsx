@@ -1,16 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useRegisterNewUserMutation } from '../../redux/userAPI'
 
 export default function Register() {
+    const [user, setUser] = useState({})
+    const [error, setError] = useState({generalError:'',passwordError:''})
+    const [registerUser, result] = useRegisterNewUserMutation()
+
+    const onSubmit =async(e)=>{
+        e.preventDefault()        
+        if(user.confirmPassword !== user.password){
+            setError({...error, passwordError:"PASSWORDS MUST MATCH"})
+            return
+        }else if(user.password.length < 8) {
+            setError({...error, passwordError:"PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG"})
+            return
+        }
+       await registerUser(user)
+       if(result.isSuccess === false){
+        setError({...error, generalError:"UH-OH! YOU MAY ALREADY HAVE AN ACCOUNT! PLEASE LOGIN OR TRY AGAIN LATER!"})
+       }
+    }
     return (
-        <div>
+        <div className='px-3'>
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                     Let's Create an Account!
                 </h2>
             </div>
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6 px-3 " action="#" method="POST">
+                <form className="space-y-5" onSubmit={(e)=>onSubmit(e)} method="POST">
+                    <p className='text-sm text-red-500 drop-shadow font-bold'>{error.generalError}</p>
                     <div>
                         <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
                             First Name
@@ -22,6 +42,7 @@ export default function Register() {
                                 type="text"
                                 autoComplete="given-name"
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                onChange={(e)=>{setUser({...user, firstName:e.target.value})}}
                             />
                         </div>
                     </div>
@@ -37,6 +58,7 @@ export default function Register() {
                                 type="text"
                                 autoComplete="family-name"
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                onChange={(e)=>{setUser({...user, lastName:e.target.value})}}
                             />
                         </div>
                     </div>
@@ -53,6 +75,7 @@ export default function Register() {
                                 autoComplete="email"
                                 required
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                onChange={(e)=>{setUser({...user, email:e.target.value})}}
                             />
                         </div>
                     </div>
@@ -61,15 +84,16 @@ export default function Register() {
                         <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                             Password
                         </label>
-
+                        <p className='text-xs text-red-500 font-bold'>{error.passwordError}</p>
                         <div className="mt-2">
                             <input
                                 id="password"
                                 name="password"
-                                type="password"
+                                type="password"                               
                                 autoComplete="off"
                                 required
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                onChange={(e)=>{setUser({...user, password:e.target.value})}}
                             />
                         </div>
                     </div>
@@ -78,6 +102,7 @@ export default function Register() {
                         <label htmlFor="confirmPassword" className="block text-sm font-medium leading-6 text-gray-900">
                             Confirm Password
                         </label>
+                        
                         <div className="mt-2">
                             <input
                                 id="confirmPassword"
@@ -86,6 +111,7 @@ export default function Register() {
                                 autoComplete='off'
                                 required
                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                onChange={(e)=>{setUser({...user, confirmPassword:e.target.value})}}
                             />
                         </div>
                     </div>

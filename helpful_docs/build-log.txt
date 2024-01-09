@@ -2,3 +2,5 @@
 1/7/2024 - 4 hours - Build database, implement sequelize, and passport local strategy
 1/7/2024 - 2 hours - Build homepage, impemented parksApi via redux
 1/8/2024 - 1 hour - Build initial navbar
+1/8/2024 - 5 hours - Build navigation, and api query with user signin and registration
+1/9/2024 - 1 hour - added logo idea and styled components

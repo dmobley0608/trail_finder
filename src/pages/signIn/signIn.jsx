@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {  useLoginMutation } from '../../redux/userAPI'
 import Loading from '../loading/loading';
-
+import logo from '../../static/images/trailFinderLogo.png'
 export default function SignIn() {
   const [login, result] = useLoginMutation();
   const [userInfo, setUserInfo] = useState({})
@@ -29,16 +29,16 @@ export default function SignIn() {
           <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
               <img
-                className="mx-auto h-10 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                className="mx-auto h-[150px] w-auto"
+                src={logo}
                 alt="Trail Finder"
               />
-              <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                 Sign in to your account
               </h2>
             </div>
             <p className='text-sm text-red-500 font-bold'>{error}</p>
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
               <form className="space-y-6" onSubmit={(e) => onSubmit(e)} method="POST">
                 <div >
                   <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">

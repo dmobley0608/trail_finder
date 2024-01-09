@@ -1,9 +1,9 @@
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useGetUserQuery, useLazyLogoutQuery } from '../../../redux/userAPI'
-
+import logo from '../../../static/images/trailFinderLogo.svg'
 const navigation = [
     { name: 'Home', href: '/', current: true },
     { name: 'Parks', href: '#', current: false },
@@ -17,12 +17,12 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
-    const {data:user, refetch } = useGetUserQuery()
-    const [trigger, {data}] = useLazyLogoutQuery()
-   
-    
+    const { data: user, refetch } = useGetUserQuery()
+    const [trigger, { data }] = useLazyLogoutQuery()
+
+
     return (
-        <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10"> 
+        <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10 ">
             {({ open }) => (
                 <>
                     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -42,38 +42,23 @@ export default function Navbar() {
                             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="flex flex-shrink-0 items-center">
                                     <img
-                                        className="h-8 w-auto"
-                                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                                        className="mx-auto h-10 w-auto"
+                                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                                         alt="Trail Finder"
                                     />
                                 </div>
                                 <div className="hidden sm:ml-6 sm:block">
-                                    <div className="flex space-x-4 ">
-                                        {navigation.map((item) => (
-                                            <a
-                                                key={item.name}
-                                                href={item.href}
-                                                className={classNames(
-                                                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                                    'rounded-md px-3 py-2 text-sm font-medium'
-                                                )}
-                                                aria-current={item.current ? 'page' : undefined}
-                                            >
-                                                {item.name}
-                                            </a>
-                                        ))}
-
+                                    <div className="flex space-x-4">
+                                        <NavLink to='/'
+                                            className={({ isActive }) => isActive ? 'bg-blue-500 sm:bg-transparent text-black sm:text-gray-100 sm:border-b-2 sm:pb-1  px-6 sm:px-1' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2  font-medium'}
+                                        >Home</NavLink>
+                                        {/* if user is not logged in */}
                                     </div>
                                 </div>
-                                {/* if user is not logged in */}
-                                {!user &&
-                                    <a href="/signin" className='hidden sm:flex text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium ml-auto'>
-                                        Sign In
-                                    </a>
-                                }
+
                             </div>
                             {/* ***Only show if user is logged in*** */}
-                            {user && <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                            {user ? <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                                 <button
                                     type="button"
                                     className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -127,20 +112,28 @@ export default function Navbar() {
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
-                                              
-                                                    <button
-                                                        onClick={()=>{trigger(); refetch()}}
-                                                        className={ 'block px-4 py-2 text-sm text-gray-700 mx-auto'}
-                                                    >
-                                                        Sign out
-                                                    </button>
-                                                
+
+                                                <button
+                                                    onClick={() => { trigger(); refetch() }}
+                                                    className={'block px-4 py-2 text-sm text-gray-700 mx-auto'}
+                                                >
+                                                    Sign out
+                                                </button>
+
                                             </Menu.Item>
                                         </Menu.Items>
                                     </Transition>
                                 </Menu>
 
                             </div>
+                                :
+                                <div>
+                                    <NavLink to="/signin" 
+                                    className={`hidden sm:flex ${({ isActive }) => isActive ? 'bg-blue-500 sm:bg-transparent text-black sm:text-gray-100 sm:border-b-2 sm:pb-1  px-6 sm:px-1' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2  font-medium'}`}>
+                                        Sign In/Register
+                                    </NavLink>
+                                </div>
+
                             }
                         </div>
 
@@ -149,7 +142,7 @@ export default function Navbar() {
                     <Disclosure.Panel className="sm:hidden ">
                         <div className="space-y-1 px-2 pb-3 pt-2 border">
                             <Disclosure.Button as={NavLink} to="/"
-                                className={({ isActive }) => isActive ? 'bg-blue-200 text-black rounded px-6' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'}>
+                                className={`${({ isActive }) => isActive ? 'bg-blue-200 text-black rounded px-6' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium'}`}>
                                 Home
 
                             </Disclosure.Button>

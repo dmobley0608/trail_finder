@@ -12,9 +12,10 @@ export default function SignIn() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await login(userInfo)    
-    if (result.error) {
-      setError('INVALID USERNAME OR PASSWORD')     
+    const res = await login(userInfo)  
+   
+    if (res.error) {
+      setError(res.error.data)     
     }else{
       nav('/')
       return

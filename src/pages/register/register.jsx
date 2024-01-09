@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useGetUserQuery, useRegisterNewUserMutation } from '../../redux/userAPI'
+import {  useRegisterNewUserMutation } from '../../redux/userAPI'
 import Loading from '../loading/loading'
 
 export default function Register() {

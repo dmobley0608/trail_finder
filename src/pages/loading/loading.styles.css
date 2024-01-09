@@ -1,0 +1,9 @@
+
+#loading-screen .circle{
+    width: 350px;
+    height: 350px;
+    border: 30px dotted  rgb(30 41 59 / var(--tw-border-opacity));
+    border-radius: 50%;
+    padding:15px;    
+    
+}

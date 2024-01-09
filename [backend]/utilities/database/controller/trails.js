@@ -6,7 +6,7 @@ exports.getTrailsByPark=async(req,res)=>{
     try{
         console.log("Retrieving Trails By Park")
         const trails = await Trails.findAll({where:{parkId:req.params.parkId}})
-        console.log("Trailss Retrieved Successfully")
+        console.log("Trailss Retrieved Successfully") 
         res.json(trails)
     }catch(err){
         console.warn("Error Retrieving Trailss: ", err)

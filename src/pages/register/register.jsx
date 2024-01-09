@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useRegisterNewUserMutation } from '../../redux/userAPI'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useGetUserQuery, useRegisterNewUserMutation } from '../../redux/userAPI'
 
 export default function Register() {
     const [user, setUser] = useState({})
     const [error, setError] = useState({generalError:'',passwordError:''})
     const [registerUser, result] = useRegisterNewUserMutation()
+    const {data} = useGetUserQuery()
+    const nav = useNavigate()
 
     const onSubmit =async(e)=>{
         e.preventDefault()        
@@ -17,10 +19,19 @@ export default function Register() {
             return
         }
        await registerUser(user)
-       if(result.isSuccess === false){
+       console.log(result.error)
+       if(!result.data){
         setError({...error, generalError:"UH-OH! YOU MAY ALREADY HAVE AN ACCOUNT! PLEASE LOGIN OR TRY AGAIN LATER!"})
+        return
        }
+       
     }
+
+    useEffect(()=>{
+        if(data){
+            nav('/')
+        }
+    },[data])
     return (
         <div className='px-3'>
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">

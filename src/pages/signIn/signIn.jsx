@@ -1,7 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useGetUserQuery, useLoginMutation } from '../../redux/userAPI'
 
 export default function SignIn() {
+  const [login, result] = useLoginMutation();
+  const [userInfo, setUserInfo] = useState({})
+  const [error, setError] = useState()
+  const nav = useNavigate()
+  const {data:user} = useGetUserQuery()
+
+  const onSubmit=async(e)=>{
+    e.preventDefault();
+    await login(userInfo)
+    if(user){
+      nav('/')
+      return
+    }
+    setError('INVALID USERNAME OR PASSWORD')
+  }
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -14,10 +30,10 @@ export default function SignIn() {
             Sign in to your account
           </h2>
         </div>
-
+          <p className='text-sm text-red-500 font-bold'>{error}</p>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
-            <div>
+          <form className="space-y-6" onSubmit={(e)=>onSubmit(e)} method="POST">
+            <div >
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
               </label>
@@ -29,20 +45,17 @@ export default function SignIn() {
                   autoComplete="email"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e)=>{setUserInfo({...userInfo, email:e.target.value})}}
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
+              <div className="">
                 <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                 </label>
-                <div className="text-sm">
-                  <Link to="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
-                  </Link>
-                </div>
+               
               </div>
               <div className="mt-2">
                 <input
@@ -52,10 +65,15 @@ export default function SignIn() {
                   autoComplete="current-password"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e)=>{setUserInfo({...userInfo, password:e.target.value})}}
                 />
               </div>
             </div>
-
+            <div className="text-sm ">
+                  <Link to="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                    Forgot password?
+                  </Link>
+                </div>
             <div>
               <button
                 type="submit"

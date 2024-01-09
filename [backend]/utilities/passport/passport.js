@@ -25,14 +25,15 @@ passport.use(new LOCALSTRATEGY(
 }))
 
 passport.serializeUser(function (user, cb) {
- 
+   
     process.nextTick(() => {
-        cb(null, {id:user.id, username: user.email, role: user.role })
+        cb(null, {id:user.id, email:user.dataValues.email, firstName:user.dataValues.firstName, lastName:user.dataValues.lastName, role: user.role })
     })
-});
-passport.deserializeUser(function (user, cb) {   
+}); 
+passport.deserializeUser(function (user, cb) {  
+   
     process.nextTick(() => {
-        cb(null, {id:user.id, username: user.email, role: user.role })
+        cb(null, {...user})
     })
 })
 

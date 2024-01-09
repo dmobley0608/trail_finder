@@ -1,7 +1,8 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, NavLink } from 'react-router-dom'
+import { useGetUserQuery, useLazyLogoutQuery } from '../../../redux/userAPI'
 
 const navigation = [
     { name: 'Home', href: '/', current: true },
@@ -16,9 +17,12 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
-    const user = null;
+    const {data:user, refetch } = useGetUserQuery()
+    const [trigger, {data}] = useLazyLogoutQuery()
+   
+    
     return (
-        <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10">
+        <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10"> 
             {({ open }) => (
                 <>
                     <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -123,14 +127,14 @@ export default function Navbar() {
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
-                                                {({ active }) => (
-                                                    <a
-                                                        href="#"
-                                                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                              
+                                                    <button
+                                                        onClick={()=>{trigger(); refetch()}}
+                                                        className={ 'block px-4 py-2 text-sm text-gray-700 mx-auto'}
                                                     >
                                                         Sign out
-                                                    </a>
-                                                )}
+                                                    </button>
+                                                
                                             </Menu.Item>
                                         </Menu.Items>
                                     </Transition>

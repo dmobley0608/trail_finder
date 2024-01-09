@@ -6,6 +6,18 @@ const TrailReviews = require("../models/trailReview")
 const Trails = require("../models/trails")
 const Users = require("../models/users")
 
+
+exports.getCurrentUser=async(req,res)=>{
+    try {
+        console.log("Checking for current user")
+        const user = req.user            
+        if(!user){res.json(null); return}
+        res.status(200).json(user)
+    } catch (error) {
+        console.warn("ERROR FETCHING USER", error)
+        res.status(500).json("ERROR FETCHING USER")
+    }
+}
 exports.getUserById=async(req,res)=>{
     try {
         const user = await Users.findByPk(req.params.id, 
@@ -16,28 +28,30 @@ exports.getUserById=async(req,res)=>{
         res.status(200).json(user)
     } catch (error) {
         console.warn("ERROR FETCHING USER", error)
-        res.status(500).json("ERROR FETCHING USER")
+        res.status(500).json("ERROR FETCHING USER") 
     }
 }
-exports.createUser=async(req, res)=>{
+exports.createUser=async(req, res, next)=>{
     try {
         const hashedPassword = await hashPassword(req.body.password)       
         const user = await Users.create({...req.body, password:hashedPassword, role:'USER'})
+        
         if(!user){
             console.log('ERROR CREATING USER')
             res.status(400).json("ERROR CREATING USER")
             return
-        }
-        res.status(200).json(user.id)
+        }       
+        // login user
+        next();
     } catch (error) {
-        console.warn("ERROR CREATING USER", error)
+        console.warn("ERROR CREATING USER", error) 
         res.status(500).json('ERROR CREATING USER')
     }
 }
 
 exports.deleteUser=async(req,res)=>{
     try {
-        const user = await Users.findByPk(req.params.id)
+        const user = await Users.findByPk(req.params.id) 
         await user.destroy()
         res.status(200).json("User Successfully Removed")
     } catch (error) {
@@ -80,7 +94,7 @@ exports.signout=async(req,res)=>{
             }
             await Session.destroy({where:{sid:req.sessionID}})
           
-            res.status(200).json("Successfully Signed Out")
+            res.status(200).json(null)
         })
        
     } catch (error) {

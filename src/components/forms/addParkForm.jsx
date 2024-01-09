@@ -1,25 +1,38 @@
 import React from 'react'
 import { useForm } from "react-hook-form"
-export default AddParkForm = () => {
+
+export default function AddParkForm() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onsubmit = (data) => console.log(data)
+    const onSubmit = (data) => console.log(data)
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <input {...register("name", { required: true })} />
+            <form onSubmit={handleSubmit(onSubmit)} className='px-5 max-w-[800px] mx-auto text-start'>
+                <div className='mt-3'>
+                    <label htmlFor='name' className="block text-sm font-medium leading-6 text-gray-900">Name of Park</label>
+                    <input id='name' {...register("name", { required: true })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    />
                     {errors.name && <span>Required</span>}
                 </div>
-                <div>
-                    <input {...register("streetAddress", { required: false })} />
+                <div className='mt-3'>
+                    <label htmlFor='streetAddress' className="block text-sm font-medium leading-6 text-gray-900">Street Address</label>
+                    <input id='streetAddress'{...register("streetAddress", { required: false })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    />
                     {errors.streetAddress && <span>Required</span>}
                 </div>
-                <div>
-                    <input {...register("city", { required: true })} />
+                <div className='mt-3'>
+                    <label htmlFor='city' className="block text-sm font-medium leading-6 text-gray-900">City</label>
+                    <input id='city' {...register("city", { required: true })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    />
                     {errors.city && <span>Required</span>}
                 </div>
-                <div>
-                    <select {...register("state", {required})}>
+                <div className='mt-3'>
+                    <label htmlFor='state' className="block text-sm font-medium leading-6 text-gray-900">State</label>
+                    <select id='state' {...register("state", { required: true })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    >
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
                         <option value="AZ">Arizona</option>
@@ -74,29 +87,52 @@ export default AddParkForm = () => {
                     </select>
                     {errors.state && <span>Required</span>}
                 </div>
-                <div>
-                    <input {...register("zip", { required: false })} />
+                <div className='mt-3'>
+                    <label htmlFor='zip' className="block text-sm font-medium leading-6 text-gray-900">Zipcode</label>
+                    <input id='zip' {...register("zip", { required: false })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    />
                     {errors.zip && <span>Required</span>}
                 </div>
-                <div>
-                    <input {...register("phoneNumber", { required: false })} />
+                <div className='mt-3'>
+                    <label htmlFor='phoneNumber' className="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
+                    <input id='phoneNumber' {...register("phoneNumber", { required: false })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    />
                     {errors.phoneNumber && <span>Required</span>}
                 </div>
-                <div>
-                    <input {...register("url", { required: false })} />
+                <div className='mt-3'>
+                    <label htmlFor='url' className="block text-sm font-medium leading-6 text-gray-900">Url</label>
+                    <input id='url' {...register("url", { required: false })}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    />
                     {errors.url && <span>Required</span>}
                 </div>
-                <div>
-                    <input {...register("parkingFee", { required: false })} />
-                    {errors.parkingFee && <span>Required</span>}
+                <div className='justify-between columns-2 mt-3'>
+                    <div className='w-full'>
+                        <label htmlFor='parkingFee' className="block text-sm font-medium leading-6 text-gray-900">Parking Fee</label>
+                        <input id='parkingFee' {...register("parkingFee", { required: false })}
+                            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                        />
+                        {errors.parkingFee && <span>Required</span>}
+                    </div>
+                    <div className='w-full '>
+                        <label htmlFor='ridingFee' className="block text-sm font-medium leading-6 text-gray-900">Riding Fee</label>
+                        <input id='ridingFee' {...register("ridingFee", { required: false })}
+                            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                        />
+                        {errors.ridingFee && <span>Required</span>}
+                    </div>
                 </div>
-                <div>
-                    <input {...register("ridingFee", { required: false })} />
-                    {errors.ridingFee && <span>Required</span>}
+
+                <div className='mt-3'>
+                    <label htmlFor='description' className="block text-sm font-medium leading-6 text-gray-900">Description of Park</label>
+                    <textarea {...register("description")} rows={10}
+                        className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                    ></textarea>
                 </div>
-                <div>
-                    <textarea {...register("description")}></textarea>
-                </div>
+
+                <input type='submit' className='my-5 border py-2 px-6 rounded bg-indigo-800 text-white hover:bg-indigo-700 hover:cursor-pointer' />
             </form>
         </>
     )

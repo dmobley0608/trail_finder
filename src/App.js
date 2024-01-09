@@ -5,6 +5,7 @@ import Homepage from './pages/homepage/homepage';
 import Register from './pages/register/register';
 import SignIn from './pages/signIn/signIn';
 import Root from './components/navigation/layouts/root/root';
+import AddParkForm from './components/forms/addParkForm';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root/>}>
@@ -17,7 +18,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 function App() {
   return (
     <div className="App">     
-      <RouterProvider router={router} />
+      <RouterProvider router={router} />      
     </div>
   );
 }

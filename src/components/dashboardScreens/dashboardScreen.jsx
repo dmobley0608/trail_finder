@@ -1,9 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import React, { Fragment } from 'react'
-import AddParkForm from '../forms/addParkForm'
 
-export default function AddParkScreen({open, setOpen}) {
+
+export default function DashboardSlideScreen({open, setOpen, title, description, children}) {
   return (
     <Transition.Root show={open} as={Fragment}>
     <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -45,14 +45,14 @@ export default function AddParkScreen({open, setOpen}) {
                             <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                                 <div className="px-4 sm:px-6 pb-3">
                                     <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                                        <p className='text-lg font-bold'>Add New Park</p>
-                                        <p className='text-xs'>This form is used to add a park to the public list. Everyone will be able to search and view your newly created park.</p>
+                                        <p className='text-lg font-bold'>{title}</p>
+                                        <p className='text-xs'>{description}</p>
                                     </Dialog.Title>
 
                                 </div>
                                 <hr />
                                 <div className="relative  flex-1 px-4 sm:px-6">
-                                    <AddParkForm />
+                                   {children}
                                 </div>
                             </div>
                         </Dialog.Panel>

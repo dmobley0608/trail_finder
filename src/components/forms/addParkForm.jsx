@@ -12,7 +12,8 @@ export default function AddParkForm() {
     const onSubmit = async (data) => {
         const res = await (createNewPark(data))
         if(res.error && res.error.status === 409){
-            setSubmissionErr(true)
+            console.log(res)
+            setSubmissionErr({...res.error.data.park, message:'This park is already listed. You can view the page by clicking the link below.'})
             return
         }else if(res.error){
            console.log(res)
@@ -25,7 +26,9 @@ export default function AddParkForm() {
         <>
             {isLoading ? <Loading /> :
                 <form onSubmit={handleSubmit(onSubmit)} className='px-5 max-w-[800px] mx-auto text-start'>
-                    <p className=" mt-3 text-sm font-bold text-red-500 uppercase">{submissionErr}</p>
+                    {submissionErr && <p className=" mt-3 text-xs font-bold text-red-500 uppercase">{submissionErr.message}</p>}
+                    {submissionErr && submissionErr.id && <NavLink className='text-indigo-950 underline' to={`/parks/${submissionErr.id}`}>VIEW {submissionErr.name} HERE</NavLink>}
+                    
                     <div className='mt-3'>
                         <label htmlFor='name' className="block text-sm font-medium leading-6 text-gray-900">Name of Park</label>
                         <input id='name' {...register("name", { required: true })}

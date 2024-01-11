@@ -1,52 +1,52 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { useGetUserQuery } from '../../redux/userAPI'
-import { useNavigate } from 'react-router'
-import Loading from '../loading/loading'
-import { Dialog, Transition } from '@headlessui/react'
+import React, { Fragment, useState } from 'react'
+
 import AddParkForm from '../../components/forms/addParkForm'
-import { XMarkIcon } from '@heroicons/react/24/outline'
 import DashboardButton from '../../components/dashboardButtons/dashboardButton'
-import AddParkScreen from '../../components/dashboardScreens/addParkScreen'
+import DashboardSlideScreen from '../../components/dashboardScreens/dashboardScreen'
 
 
 
 export default function Dashboard() {
-    const { data: user, isLoading, refetch } = useGetUserQuery()
-    const [open, setOpen] = useState(false)
-    const nav = useNavigate()
 
-    // Concept is to have multiple button layouts for different options. ie (Add a park button and the park form slides over)
-    const validateUser = async () => {
-        await refetch().then(res => {
-            if (!res.data.id) {
-                nav('/sigin')
-            }
-        })
-    }
+    const [openParkForm, setOpenParkForm] = useState(false)
+    const [openRideForm, setOpenRideForm] = useState(false)
+    const [openBarnScreen, setOpenBarnScreen] = useState(false)
+    const [openProfileScreen, setOpenProfileScreen] = useState(false)
 
-    useEffect(() => {
-        validateUser()
-    }, [user])
     return (
         <>
-            {isLoading ? <Loading /> :
-                <>
-                    {isLoading ? <Loading /> : <>
+            <div>
+                <h2 className='text-xl font-bold'>Utilities</h2>
+                <div className='w-full justify-center'>
+                    <div className='mt-5 flex flex-wrap justify-center mx-auto max-w-sm'>
                         <div>
-                            <h2 className='text-xl font-bold'>Utilities</h2>
-                            <div className='mt-5 space-x-4'>
-                                <DashboardButton open={open} setOpen={setOpen}>Add Ride</DashboardButton>
-                                <DashboardButton open={open} setOpen={setOpen}>Add Park</DashboardButton>
-                                <DashboardButton open={open} setOpen={setOpen}>Manage Barn</DashboardButton>
-                                <DashboardButton open={open} setOpen={setOpen}>Edit Profile</DashboardButton>
-                            </div>
-
+                            <DashboardButton open={openRideForm} setOpen={setOpenRideForm}>Add Ride</DashboardButton>
+                            <DashboardButton open={openParkForm} setOpen={setOpenParkForm}>Add Park</DashboardButton>
                         </div>
-                      <AddParkScreen open={open} setOpen={setOpen}/>
+                        <div>
+                            <DashboardButton open={openBarnScreen} setOpen={setOpenBarnScreen}>Manage Barn</DashboardButton>
+                            <DashboardButton open={openProfileScreen} setOpen={setOpenProfileScreen}>Edit Profile</DashboardButton>
+                        </div>
+                    </div>
+                </div>
 
-                    </>}
-                </>
-            }
+
+            </div>
+            <DashboardSlideScreen open={openParkForm} setOpen={setOpenParkForm} title="Create A New Park" description={'Use this form to add a park to the public view list.'}>
+                <AddParkForm />
+            </DashboardSlideScreen>
+
+            <DashboardSlideScreen open={openRideForm} setOpen={setOpenRideForm} title="Add A New Ride" description={"Use this form to help keep track of your rides"}>
+                "Ride Form"
+            </DashboardSlideScreen>
+
+            <DashboardSlideScreen open={openBarnScreen} setOpen={setOpenBarnScreen} title="Manage Your Barn" description={"Use this screen to manage your horses."}>
+                "Barn Screen"
+            </DashboardSlideScreen>
+
+            <DashboardSlideScreen open={openProfileScreen} setOpen={setOpenProfileScreen} title="Manage your profile" description={"Use this screen to manage your profile."}>
+                "Profile Screen"
+            </DashboardSlideScreen>
         </>
 
     )

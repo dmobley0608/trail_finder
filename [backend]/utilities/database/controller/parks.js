@@ -57,15 +57,16 @@ exports.addPark = async (req, res) => {
         let park = await Park.findOne({ where: { name: { [Op.like]: `${req.body.name}` }, state: { [Op.like]: `${req.body.state}` } } })
         // Check to see if park already exists
         if (park) {
+            console.log(park)
             console.log("Park is Already in Database")
-            res.status(409).json({message:"Park already exists!", park:park.id})
+            res.status(409).json({message:"Park already exists!", park:park})
            
             return
         }
         //remove empty strings
         for(const [key, value] of Object.entries(req.body)){
             if(value === ''){
-                req.body.key = null;
+                req.body[key] = null;
             }
         }
         //Create park if one does not exist

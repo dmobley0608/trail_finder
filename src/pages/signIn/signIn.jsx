@@ -1,6 +1,6 @@
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {  useLoginMutation } from '../../redux/userAPI'
+import { useLoginMutation } from '../../redux/userAPI'
 import Loading from '../loading/loading';
 import logo from '../../static/images/trailFinderLogo.png'
 export default function SignIn() {
@@ -8,19 +8,18 @@ export default function SignIn() {
   const [userInfo, setUserInfo] = useState({})
   const [error, setError] = useState()
   const nav = useNavigate()
- 
+
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const res = await login(userInfo)  
-   
-    if (res.error) {
-      setError(res.error.data)     
-    }else{
-      nav(`/user/${res.data.id}/dashboard`)
-      return
-    }
-    
+    await login(userInfo)
+      .then(res => {
+        if (res.error) {
+          setError(res.error.data)
+          return
+        }
+        nav(`/user/${res.data.id}/dashboard`)
+      })
   }
   return (
     <>

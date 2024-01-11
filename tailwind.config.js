@@ -3,10 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}"
   ],
-  theme: {
-    screens:{
-      'smallphone':'452px'
-    },
+  theme: {   
     extend: {
       animation:{       
           'spin-slow': 'spin 10s linear infinite',        

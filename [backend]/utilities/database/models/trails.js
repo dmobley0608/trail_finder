@@ -10,14 +10,7 @@ const Trails = sequelize.define('Trails', {
     color:DataTypes.STRING,
     difficulty:DataTypes.STRING,
     description:DataTypes.STRING,
-    rating:{
-        type:DataTypes.FLOAT,
-        defaultValue:1,
-        validate:{
-            min:1,
-            max:5
-        }
-    },
+   
     ParkId:{
         type:DataTypes.UUID,
         references:{

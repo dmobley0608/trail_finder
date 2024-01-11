@@ -58,8 +58,15 @@ exports.addPark = async (req, res) => {
         // Check to see if park already exists
         if (park) {
             console.log("Park is Already in Database")
-            res.json("Park already exists!")
+            res.status(409).json({message:"Park already exists!", park:park.id})
+           
             return
+        }
+        //remove empty strings
+        for(const [key, value] of Object.entries(req.body)){
+            if(value === ''){
+                req.body.key = null;
+            }
         }
         //Create park if one does not exist
         console.log(`Adding ${req.body.name} to the database`)
@@ -68,7 +75,7 @@ exports.addPark = async (req, res) => {
         res.status(200).json(park)
     } catch (error) {
         console.warn("Error Creating Park:", error)
-        res.json(error)
+        res.status(500).json("Error creating park.")
     }
 }
 

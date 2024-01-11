@@ -10,6 +10,14 @@ const ParkReviews = sequelize.define('ParkReviews', {
             notEmpty:true
         }
     },
+    rating:{
+        type:DataTypes.FLOAT,
+        defaultValue:1,
+        validate:{
+            min:1,
+            max:5
+        }
+    },
     date:DataTypes.DATEONLY,
     ParkId:{
         type:DataTypes.UUID,

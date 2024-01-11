@@ -3,23 +3,18 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { NavLink } from 'react-router-dom'
 import { useGetUserQuery, useLazyLogoutQuery } from '../../../redux/userAPI'
-import logo from '../../../static/images/trailFinderLogo.svg'
-const navigation = [
-    { name: 'Home', href: '/', current: true },
-    { name: 'Parks', href: '#', current: false },
-    { name: 'About', href: '#', current: false },
-    { name: 'Plan A Ride', href: '#', current: false },
 
-]
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
+
 
 export default function Navbar() {
     const { data: user, refetch } = useGetUserQuery()
-    const [trigger, { data }] = useLazyLogoutQuery()
+    const [trigger] = useLazyLogoutQuery()
 
+    const signout = async()=>{
+       trigger().unwrap();   
+       refetch()    
+    }
 
     return (
         <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10 ">
@@ -47,13 +42,14 @@ export default function Navbar() {
                                         alt="Trail Finder"
                                     />
                                 </div>
-                                <div className="hidden sm:ml-6 sm:block">
-                                    <div className="flex space-x-4">
+                                <div className="hidden sm:ml-6 sm:block   ">
+                                    <div className="flex space-x-4 items-end  mt-5 ">
                                         <NavLink to='/'
-                                            className={({ isActive }) => isActive ? 'bg-blue-500 sm:bg-transparent text-black sm:text-gray-100 sm:border-b-2 sm:pb-1  px-6 sm:px-1' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2  font-medium'}
+                                            className={({ isActive }) => isActive ? 'sm:text-gray-100 sm:border-b-2  hover:bg-gray-700  px-6 sm:px-1 ' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3  font-medium'}
                                         >Home</NavLink>
-                                        {/* if user is not logged in */}
+
                                     </div>
+
                                 </div>
 
                             </div>
@@ -92,29 +88,13 @@ export default function Navbar() {
                                     >
                                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <Menu.Item>
-                                                {({ active }) => (
-                                                    <a
-                                                        href="#"
-                                                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                                    >
-                                                        Your Profile
-                                                    </a>
-                                                )}
+                                                <NavLink to={`/user/${user.id}/dashboard`}
+                                                    className={({ isActive }) => isActive ? 'sm:text-gray-800 sm:border-b-2  hover:bg-gray-500 font-bold  px-6 sm:px-1' : ' text-gray-800 hover:bg-gray-700 hover:text-white block rounded-md px-3'}
+                                                >Dashboard</NavLink>
                                             </Menu.Item>
                                             <Menu.Item>
-                                                {({ active }) => (
-                                                    <a
-                                                        href="#"
-                                                        className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                                                    >
-                                                        Settings
-                                                    </a>
-                                                )}
-                                            </Menu.Item>
-                                            <Menu.Item>
-
                                                 <button
-                                                    onClick={() => { trigger(); refetch() }}
+                                                    onClick={() => { signout() }}
                                                     className={'block px-4 py-2 text-sm text-gray-700 mx-auto'}
                                                 >
                                                     Sign out
@@ -128,8 +108,8 @@ export default function Navbar() {
                             </div>
                                 :
                                 <div>
-                                    <NavLink to="/signin" 
-                                    className={`hidden sm:flex ${({ isActive }) => isActive ? 'bg-blue-500 sm:bg-transparent text-black sm:text-gray-100 sm:border-b-2 sm:pb-1  px-6 sm:px-1' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2  font-medium'}`}>
+                                    <NavLink to="/signin"
+                                        className={`hidden sm:flex ${({ isActive }) => isActive ? 'bg-blue-500 sm:bg-transparent text-black sm:text-gray-100 sm:border-b-2 sm:pb-1  px-6 sm:px-1' : ' text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2  font-medium'}`}>
                                         Sign In/Register
                                     </NavLink>
                                 </div>

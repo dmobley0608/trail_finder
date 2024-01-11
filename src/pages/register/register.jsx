@@ -19,13 +19,13 @@ export default function Register() {
             setError({ ...error, passwordError: "PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG" })
             return
         }
-        await registerUser(user)
+        const res = await registerUser(user)
 
-        if (result.error) {
+        if (res.error) {
             setError({ ...error, generalError: "UH-OH! YOU MAY ALREADY HAVE AN ACCOUNT! PLEASE LOGIN OR TRY AGAIN LATER!" })
             return
         } else {
-            nav('/')
+            nav(`/user/${res.data.id}/dashboard`)
         }
 
     }

@@ -25,27 +25,17 @@ const Parks = sequelize.define('Parks', {
     state: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            len: [4, 13],
+        validate: {           
             notEmpty: true
         }
 
     },
     zip: DataTypes.STRING,
     phone: DataTypes.STRING,
-    rating:{
-        type:DataTypes.FLOAT,
-        defaultValue:1,
-        validate:{
-            min:1,
-            max:5
-        }
-    },
+    
     url: {
         type:DataTypes.STRING,
-        validate:{
-            isUrl:true
-        }
+        allowNull:true,       
     },
     description:{
         type:DataTypes.STRING,

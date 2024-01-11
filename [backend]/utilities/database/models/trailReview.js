@@ -10,6 +10,14 @@ const TrailReviews = sequelize.define('TrailReviews', {
             notEmpty:true
         }
     },
+    rating:{
+        type:DataTypes.FLOAT,
+        defaultValue:1,
+        validate:{
+            min:1,
+            max:5
+        }
+    },
     date:DataTypes.DATEONLY,
     TrailId:{
         type:DataTypes.INTEGER,

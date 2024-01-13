@@ -7,6 +7,7 @@ import SignIn from './pages/signIn/signIn';
 import Root from './components/navigation/layouts/root/root';
 import Dashboard from './pages/dashboard/dashboard';
 import { useGetUserQuery } from './redux/userAPI';
+import Park from './pages/park/park';
 
 const AuthUser = ({ children }) => {
   const { data } = useGetUserQuery()
@@ -25,7 +26,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/signin' element={<SignIn />} />,
     <Route path='/register' element={<Register />} />,
     <Route path='/user/:id/dashboard' element={<AuthUser><Dashboard /></AuthUser>} />
-    <Route path='/parks/:id' element={<p>You found the park</p>} />
+    <Route path='/parks/:id' element={<Park/>} />
   </Route>
 
 ))

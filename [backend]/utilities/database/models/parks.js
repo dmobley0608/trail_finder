@@ -38,7 +38,7 @@ const Parks = sequelize.define('Parks', {
         allowNull:true,       
     },
     description:{
-        type:DataTypes.STRING,
+        type:DataTypes.STRING(1000),
         validate:{
             notEmpty:true
         }

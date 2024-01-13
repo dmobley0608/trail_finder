@@ -1,6 +1,7 @@
 import React from 'react'
 import ParkSearchBar from '../../components/parkSearchBar/parkSearchBar'
 import {  useGetAllParksQuery } from '../../redux/parksApi'
+import { NavLink } from 'react-router-dom'
 
 
 export default function Homepage() {
@@ -23,7 +24,7 @@ export default function Homepage() {
             <section>
                 <hr/>
                 {data.map(park=>(
-                    <div key={park.id} className='mt-2 border-y flex flex-col'>
+                    <NavLink key={park.id} to={`/parks/${park.id}`} className='mt-2 border-y flex flex-col'>
                         <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcSlgdyby0yUYw0svm_Q97gArVD9rBgThWww&usqp=CAU' alt='park'/>
                         <p className='text-lg font-bold uppercase'>{park.name}</p>
                         <p className='text-sm font-bold uppercase'>{park.streetAddress}</p>
@@ -31,7 +32,7 @@ export default function Homepage() {
                         <p className='text-lg font-bold uppercase'>{park.state}</p>
                         {park.Trails.length > 0 && <p className='text-sm font-bold uppercase'>Miles of Trails: {park.Trails.map(trail=>trail.length).reduce((a,b)=>a+b)}</p>                       }
                         <p className='text-lg font-bold uppercase'>Rating: {park.rating}</p>
-                    </div>
+                    </NavLink>
                 ))}
             </section>
             }

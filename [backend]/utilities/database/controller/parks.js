@@ -21,7 +21,8 @@ exports.getAllParks = async (req, res) => {
 
 exports.getParkById = async (req, res) => {
     try {
-        console.log("Fetching Park by id.")
+        console.log(req.params)
+        console.log(`Fetching Park ${req.params} .`)
         const park = await Park.findByPk(req.params.id,
             {
                 include: [

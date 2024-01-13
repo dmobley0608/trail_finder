@@ -7,6 +7,9 @@ export const parksApi = createApi({
         getAllParks:builder.query({
             query:()=>({url:'/'})
         }),
+        getParkById:builder.query({
+            query:(id)=>({url:`/${id}`}) 
+        }),
         createNewPark: builder.mutation({
             query:({...body})=>({
                 url:'/',
@@ -17,4 +20,4 @@ export const parksApi = createApi({
     })
 })
 
-export const {useGetAllParksQuery, useCreateNewParkMutation} = parksApi
+export const {useGetAllParksQuery, useGetParkByIdQuery, useCreateNewParkMutation} = parksApi

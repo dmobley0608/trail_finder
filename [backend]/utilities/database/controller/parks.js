@@ -4,6 +4,7 @@ const { sequelize } = require("../../sequelize")
 const Trails = require("../models/trails")
 const ParkReviews = require("../models/parkReview")
 const TrailReviews = require("../models/trailReview")
+const Users = require("../models/users")
 
 exports.getAllParks = async (req, res) => {
     try {
@@ -22,16 +23,20 @@ exports.getAllParks = async (req, res) => {
 exports.getParkById = async (req, res) => {
     try {
         console.log(req.params)
-        console.log(`Fetching Park ${req.params} .`)
+        console.log(`Fetching Park ${req.params.id} .`)
         const park = await Park.findByPk(req.params.id,
             {
                 include: [
                     {
                         model: Trails,
-                        include: TrailReviews
+                        include:TrailReviews
                     },
                     {
-                        model:ParkReviews                       
+                        model:ParkReviews,
+                        include:{
+                            model:Users,
+                            attributes:['firstName', 'lastName']
+                        }                     
                     }
                 ],
                 order:[

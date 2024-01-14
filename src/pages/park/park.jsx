@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useGetParkByIdQuery } from '../../redux/parksApi'
 import { useParams } from 'react-router-dom'
 import Loading from '../loading/loading'
 import StarRating from '../../components/parkStarRating/starRating'
+import ReviewFormScreen from '../../components/reviewsScreen/reviewsScreen'
 
 export default function Park() {
     let { id } = useParams()
+    const [showReviewForm, setShowReviewForm] = useState(false)
     const { data: park, isLoading } = useGetParkByIdQuery(id)
     
     return (
@@ -21,8 +23,9 @@ export default function Park() {
                         <div className='mx-2'>
                             <h1 className='uppercase font-bold text-xl tracking-wide'>{park.name}</h1>
                         </div>
-                        <div className=''>
+                        <div className='' onClick={()=>setShowReviewForm(!showReviewForm)}>
                             <StarRating parkReviews={park.ParkReviews} />
+                            <ReviewFormScreen open={showReviewForm} setOpen={setShowReviewForm} park={park}/>
                         </div>
                     </div>
 

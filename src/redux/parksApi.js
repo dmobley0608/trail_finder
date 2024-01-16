@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const parksApi = createApi({
     reducerPath:'parksApi',
     baseQuery:fetchBaseQuery({baseUrl:'/api/parks'}),
+    tagTypes:['Parks'],
     endpoints:(builder)=>({
         getAllParks:builder.query({
             query:()=>({url:'/'})
@@ -15,8 +16,11 @@ export const parksApi = createApi({
                 url:'/',
                 method:'POST',
                 body:body
-            })
+                
+            }),
+            invalidatesTags:'Parks'
         })
+    
     })
 })
 

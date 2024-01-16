@@ -1,11 +1,12 @@
 const { Op } = require("sequelize")
 const ParkReviews = require("../models/parkReview")
 const { sequelize } = require("../../sequelize")
+const Users = require("../models/users")
 
 exports.getParkReviewsByPark=async(req,res)=>{
     try{
-        console.log("Retrieving Reviews By Park")
-        const reviews = await ParkReviews.findAll({where:{parkId:req.params.parkId}})
+        console.log("Retrieving Reviews By Park")        
+        const reviews = await ParkReviews.findAll({where:{ParkId:req.params.parkId}, order:[['createdAt', 'DESC']], include:{model:Users, attributes:['firstName', 'lastName']}})
         console.log("Park Reviews Retrieved Successfully")
         res.json(reviews)
     }catch(err){
@@ -33,9 +34,8 @@ exports.getParkReviewsById=async(req, res)=>{
 
 exports.addParkReview = async (req, res)=>{
    try {
-    console.log("Creating New Park Review")      
-    console.log(`Adding ${req.body.name} to the database`)
-    let review  = await ParkReviews.create({...req.body, ParkId:req.params.id, UserId:req.user.id})  
+    console.log("Creating New Park Review")
+    let review  = await ParkReviews.create({...req.body, ParkId:req.params.id, UserId:req.user.id})      
     console.log(`Park Review added to database`)  
     res.status(200).json(review)
    } catch (error) {

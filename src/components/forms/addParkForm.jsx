@@ -9,6 +9,7 @@ export default function AddParkForm() {
     const [createNewPark, {isLoading}] = useCreateNewParkMutation()
     const [submissionErr, setSubmissionErr] = useState(null)
     const nav = useNavigate()
+    
     const onSubmit = async (data) => {
         const res = await (createNewPark(data))
         if(res.error && res.error.status === 409){

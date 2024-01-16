@@ -1,6 +1,7 @@
 import React from 'react'
 import logo from '../../static/images/trailFinderLogo.png'
 import './loading.styles.css'
+
 export default function Loading() {
     return (
         <div id='loading-screen' className='h-vh'>

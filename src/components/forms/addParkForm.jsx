@@ -1,35 +1,104 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from "react-hook-form"
 import { useCreateNewParkMutation } from '../../redux/parksApi';
 import Loading from '../../pages/loading/loading';
 import { NavLink, useNavigate } from 'react-router-dom';
+import Popup from '../popup/popup';
+import TrailForm from './trailForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTrail, selectTrails } from '../../redux/parkFormSlice';
+
 
 export default function AddParkForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const [createNewPark, {isLoading}] = useCreateNewParkMutation()
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const [createNewPark, { isLoading }] = useCreateNewParkMutation()
     const [submissionErr, setSubmissionErr] = useState(null)
+    const [showTrailForm, setShowTrailForm] = useState(false)
+    const trails = useSelector((state) => state.parkForm.trails)
+    const dispatch = useDispatch()
     const nav = useNavigate()
-    
+
     const onSubmit = async (data) => {
         const res = await (createNewPark(data))
-        if(res.error && res.error.status === 409){
+        if (res.error && res.error.status === 409) {
             console.log(res)
-            setSubmissionErr({...res.error.data.park, message:'This park is already listed. You can view the page by clicking the link below.'})
+            setSubmissionErr({ ...res.error.data.park, message: 'This park is already listed. You can view the page by clicking the link below.' })
             return
-        }else if(res.error){
-           console.log(res)
+        } else if (res.error) {
+            console.log(res)
             return
         }
         nav(`/parks/${res.data.id}`)
         console.log(res)
     }
+    //For Google AutoComplete
+    const autoCompleteRef = useRef()
+    const inputRef = useRef()
+    const options = {
+        componentRestrictions: { country: 'US' },
+        fields: ['address_components', "name", 'formatted_phone_number', 'url', 'website'],
+        types: ['park'],
+
+    }
+
+
+
+    useEffect(() => {
+        autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+            inputRef.current,
+            options
+        );
+        autoCompleteRef.current.addListener("place_changed", async function () {
+            const place = await autoCompleteRef.current.getPlace();
+            console.log(place)
+            setValue('name', place.name)
+            if (place.address_components.length === 7) {
+                setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
+                setValue('city', place.address_components[2].long_name)
+                setValue('state', place.address_components[4].short_name)
+                setValue('zip', place.address_components[6].long_name)
+            } else if (place.address_components.length === 5) {
+
+                setValue('streetAddress', ``)
+                setValue('city', place.address_components[0].long_name)
+                setValue('state', place.address_components[2].short_name)
+                setValue('zip', place.address_components[4].long_name)
+
+            } else {
+                setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
+                setValue('city', place.address_components[2].long_name)
+                setValue('state', place.address_components[3].short_name)
+                setValue('zip', place.address_components[5].long_name)
+            }
+
+            setValue('phone', place.formatted_phone_number)
+            setValue('url', place.website)
+
+        });
+
+    }, [])
+
+
+
+
+
     return (
         <>
             {isLoading ? <Loading /> :
+
                 <form onSubmit={handleSubmit(onSubmit)} className='px-5 max-w-[800px] mx-auto text-start'>
+                    <div className='mt-3'>
+                        <label htmlFor='parkSearch'
+                            className="block text-sm font-medium leading-6 text-gray-900">Search For A Park</label>
+                        <input id='parkSearch' ref={inputRef}
+                            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                        />
+                        {errors.streetAddress && <span>Required</span>}
+                    </div>
+
                     {submissionErr && <p className=" mt-3 text-xs font-bold text-red-500 uppercase">{submissionErr.message}</p>}
                     {submissionErr && submissionErr.id && <NavLink className='text-indigo-950 underline' to={`/parks/${submissionErr.id}`}>VIEW {submissionErr.name} HERE</NavLink>}
-                    
+
                     <div className='mt-3'>
                         <label htmlFor='name' className="block text-sm font-medium leading-6 text-gray-900">Name of Park</label>
                         <input id='name' {...register("name", { required: true })}
@@ -38,8 +107,9 @@ export default function AddParkForm() {
                         {errors.name && <span>Required</span>}
                     </div>
                     <div className='mt-3'>
-                        <label htmlFor='streetAddress' className="block text-sm font-medium leading-6 text-gray-900">Street Address</label>
-                        <input id='streetAddress'{...register("streetAddress", { required: false })}
+                        <label htmlFor='streetAddress'
+                            className="block text-sm font-medium leading-6 text-gray-900">Street Address</label>
+                        <input id='streetAddress' {...register("streetAddress", { required: false })}
                             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                         />
                         {errors.streetAddress && <span>Required</span>}
@@ -118,11 +188,11 @@ export default function AddParkForm() {
                         {errors.zip && <span>Required</span>}
                     </div>
                     <div className='mt-3'>
-                        <label htmlFor='phoneNumber' className="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
-                        <input id='phoneNumber' {...register("phoneNumber", { required: false })}
+                        <label htmlFor='phone' className="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
+                        <input id='phone' {...register("phone", { required: false })}
                             className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                         />
-                        {errors.phoneNumber && <span>Required</span>}
+                        {errors.phone && <span>Required</span>}
                     </div>
                     <div className='mt-3'>
                         <label htmlFor='url' className="block text-sm font-medium leading-6 text-gray-900">Url</label>
@@ -147,18 +217,31 @@ export default function AddParkForm() {
                             {errors.horseFee && <span>Required</span>}
                         </div>
                     </div>
+                    <div>
+                        <div className='mt-3 flex hover:cursor-pointer hover:bg-indigo-100 w-[150px]  py-2 rounded' onClick={() => setShowTrailForm(!showTrailForm)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-3">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            <p className='font-bold uppercase'>Add Trail</p>
+                        </div>
+                        <ol className=''>
+                            {trails &&
+                                trails.map(trail => (
+                                    <li className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
+                                        <p className='font-bold tracking-widest text-lg'>{trail.name}: {trail.length} miles</p>
+                                        <button onClick={()=>dispatch(deleteTrail(trail))} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>
+                                    </li>
+                                ))
+                            }
+                        </ol>
 
-                    <div className='mt-3'>
-                        <label htmlFor='description' className="block text-sm font-medium leading-6 text-gray-900">Description of Park</label>
-                        <textarea {...register("description", {required:true})} rows={10}
-                            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
-                        ></textarea>
-                        {errors.description && <span>Required</span>}
+
                     </div>
 
                     <input type='submit' className='my-5 border py-2 px-6 rounded bg-indigo-800 text-white hover:bg-indigo-700 hover:cursor-pointer' />
                 </form>
             }
+            <Popup open={showTrailForm} setOpen={setShowTrailForm} title={"Add Trail"}><TrailForm setShow={setShowTrailForm} /></Popup>
         </>
     )
 }

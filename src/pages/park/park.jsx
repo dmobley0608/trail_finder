@@ -38,7 +38,7 @@ export default function Park() {
                             <p><span className='font-semibold'>Address:</span> {park.streetAddress}</p>
                             <p className=' '><span className='font-semibold'>City/State:</span>{park.city}, {park.state}</p>
                             <p><span className='font-semibold'>Zip:</span> {park.zip}</p>
-                            <p><span className='font-semibold'>Phone Number:</span> {park.phoneNumber}</p>
+                            <p><span className='font-semibold'>Phone Number:</span> {park.phone}</p>
                             <p><span className='font-semibold'>Website:</span> {park.url}</p>
                             <p><span className='font-semibold'>Parking Fee: $</span>{park.parkingFee}</p>
                             <p><span className='font-semibold'>Riding/Horse Fee: $</span> {park.horseFee}</p>

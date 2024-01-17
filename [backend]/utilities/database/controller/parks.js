@@ -77,6 +77,7 @@ exports.addPark = async (req, res) => {
         }
         //Create park if one does not exist
         console.log(`Adding ${req.body.name} to the database`)
+        console.log(req.body)
         park = await Park.create({ ...req.body, UserId: req.user.id })
         console.log(`${park.name} added to database`)
         res.status(200).json(park)

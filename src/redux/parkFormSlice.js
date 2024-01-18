@@ -3,7 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const parkFormSlice = createSlice({
     name:'addParkForm',
-    initialState:{trails:[], trailCount:0},
+    initialState:{
+        trails:[], 
+        trailCount:0,        
+    },
     reducers:{
         addTrail(state, action){    
             const trail = {id:state.trailCount, ...action.payload}                   

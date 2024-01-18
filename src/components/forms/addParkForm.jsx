@@ -6,19 +6,23 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import Popup from '../popup/popup';
 import TrailForm from './trailForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTrail, selectTrails } from '../../redux/parkFormSlice';
+import { deleteTrail, resetTrails, selectTrails } from '../../redux/parkFormSlice';
+import { useAddTrailToParkMutation } from '../../redux/trailsAPI';
 
 
 export default function AddParkForm() {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [createNewPark, { isLoading }] = useCreateNewParkMutation()
+    const [addNewTrail] = useAddTrailToParkMutation()
     const [submissionErr, setSubmissionErr] = useState(null)
     const [showTrailForm, setShowTrailForm] = useState(false)
+    const [loadMessage, setLoadMessage] = useState('')
     const trails = useSelector((state) => state.parkForm.trails)
     const dispatch = useDispatch()
     const nav = useNavigate()
 
     const onSubmit = async (data) => {
+        setLoadMessage('Creating Park')
         const res = await (createNewPark(data))
         if (res.error && res.error.status === 409) {
             console.log(res)
@@ -28,15 +32,22 @@ export default function AddParkForm() {
             console.log(res)
             return
         }
+        setLoadMessage('Park Created Successfully')
+        for(let trail of trails){
+            setLoadMessage(`Adding ${trail.name} to ${res.data.name} park`)
+            trail = {...trail, parkId:res.data.id}
+            await addNewTrail(trail)
+        }
+        dispatch(resetTrails())
         nav(`/parks/${res.data.id}`)
-        console.log(res)
+        
     }
     //For Google AutoComplete
     const autoCompleteRef = useRef()
     const inputRef = useRef()
     const options = {
         componentRestrictions: { country: 'US' },
-        fields: ['address_components', "name", 'formatted_phone_number', 'url', 'website'],
+        fields: ['address_components', "reviews","name", 'formatted_phone_number', 'url', 'website'],
         types: ['park'],
 
     }
@@ -49,10 +60,14 @@ export default function AddParkForm() {
             options
         );
         autoCompleteRef.current.addListener("place_changed", async function () {
-            const place = await autoCompleteRef.current.getPlace();
-            console.log(place)
+            const place = await autoCompleteRef.current.getPlace();            
             setValue('name', place.name)
-            if (place.address_components.length === 7) {
+            if (place.address_components.length === 8) {
+                setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
+                setValue('city', place.address_components[3].long_name)
+                setValue('state', place.address_components[5].short_name)
+                setValue('zip', place.address_components[7].long_name)
+            }else if (place.address_components.length === 7) {
                 setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
                 setValue('city', place.address_components[2].long_name)
                 setValue('state', place.address_components[4].short_name)
@@ -84,7 +99,7 @@ export default function AddParkForm() {
 
     return (
         <>
-            {isLoading ? <Loading /> :
+            {isLoading ? <Loading message={loadMessage}/> :
 
                 <form onSubmit={handleSubmit(onSubmit)} className='px-5 max-w-[800px] mx-auto text-start'>
                     <div className='mt-3'>

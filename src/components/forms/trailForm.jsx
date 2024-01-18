@@ -14,7 +14,7 @@ export default function TrailForm({setShow}) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className=''>
             <div className='mt-3'>
                 <label htmlFor='name' className="block text-sm font-medium leading-6 text-gray-900">Name of Trail</label>
                 <input id='name'  {...register("name", { required: true })}
@@ -27,6 +27,17 @@ export default function TrailForm({setShow}) {
                 <input id='color'  {...register("color")}
                     className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                 />
+            </div>
+            <div className='mt-3'>
+                <label htmlFor='difficulty' className="block text-sm font-medium leading-6 text-gray-900">Trail Difficulty</label>
+                <select id='difficulty'  {...register("difficulty")}
+                    className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                >
+                    <option value='EASY'>EASY</option>
+                    <option value='MODERATE'>MODERATE</option>
+                    <option value='CHALLENGING'>CHALLENGING</option>
+                    <option value='RIGOROUS'>RIGOROUS</option>
+                </select>
             </div>
             <div className='mt-3'>
                 <label htmlFor='trailLength' className="block text-sm font-medium leading-6 text-gray-900">Length of Trail</label>

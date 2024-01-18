@@ -5,6 +5,12 @@ const TrailReviews = require("./trailReview");
 
 
 const Trails = sequelize.define('Trails', {
+    id:{
+        type:DataTypes.INTEGER,
+        autoIncrement:true,
+        primaryKey:true,
+        unique:true
+    },
     name:DataTypes.STRING,
     length:DataTypes.FLOAT,
     color:DataTypes.STRING,
@@ -22,7 +28,7 @@ const Trails = sequelize.define('Trails', {
         type:DataTypes.UUID,
         references:{
             model:'Users',
-            key:'id'
+            key:'id' 
         }
     }
 })

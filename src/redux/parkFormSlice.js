@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState={
+    showForm:false,
     trails:[], 
     trail:{},
     trailCount:0,        
@@ -10,8 +11,14 @@ export const parkFormSlice = createSlice({
     name:'addParkForm',
     initialState: initialState,
     reducers:{
+        setShowForm(state, {payload}){
+            state.showForm = payload
+        },
+        closeForm(state){
+            state.showForm = false;
+        },
         addTrail(state, action){    
-            const trail = {id:state.trailCount, ...action.payload}                   
+            const trail = {trailId:state.trailCount, ...action.payload}                   
            state.trails =  [...state.trails, trail ]
            state.trailCount += 1
         },
@@ -22,11 +29,15 @@ export const parkFormSlice = createSlice({
             state.trails= state.trails.filter(trail=> trail.id !== action.payload.id)
         },
         resetForm(state){            
-            state =  initialState
+           return  {
+                trails:[], 
+                trail:{},
+                trailCount:0,        
+            }
         }
     }
 })
 
 
-export const {addTrail, deleteTrail,setTrail, resetForm} = parkFormSlice.actions
+export const {addTrail, deleteTrail,setTrail, resetForm, setShowForm, closeForm} = parkFormSlice.actions
 export default parkFormSlice.reducer

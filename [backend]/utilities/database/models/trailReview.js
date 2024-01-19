@@ -20,7 +20,7 @@ const TrailReviews = sequelize.define('TrailReviews', {
     },
     date:DataTypes.DATEONLY,
     TrailId:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.UUID,
         references:{
             model:'Trails',
             key:'id'

@@ -1,25 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from "react-hook-form"
-import { useCreateNewParkMutation } from '../../redux/parksApi';
+
 import Loading from '../../pages/loading/loading';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Popup from '../popup/popup';
 import TrailForm from './trailForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTrail, resetForm, setTrail } from '../../redux/parkFormSlice';
+import { closeForm, deleteTrail, resetForm, setTrail } from '../../redux/parkFormSlice';
 
 import DeletePopup from '../popup/deletePopup';
-import { useAddTrailToParkMutation, useDeleteTrailFromParkMutation, useUpdateParkByIdMutation } from '../../redux/backendApi';
+import { useAddTrailToParkMutation, useCreateNewParkMutation, useDeleteTrailFromParkMutation, useUpdateParkByIdMutation } from '../../redux/backendApi';
 
 
-export default function ParkForm({park}) {
+export default function ParkForm({ park }) {
     //UseForm
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm({defaultValues:park});
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm({ defaultValues: park });
     //API
     const [createNewPark, { isLoading }] = useCreateNewParkMutation()
-    const [updatePark, {isLoading:updateLoad}] = useUpdateParkByIdMutation()
-    const [addNewTrail] = useAddTrailToParkMutation()   
-    const [deleteTrailFromDB] = useDeleteTrailFromParkMutation()
+    const [updatePark, { isLoading: updateLoad }] = useUpdateParkByIdMutation()
+    const [addNewTrail, { isLoading: addTrailLoad }] = useAddTrailToParkMutation()
+    const [deleteTrailFromDB, { isLoading: deleteTrailLoad }] = useDeleteTrailFromParkMutation()
     //React useState
     const [submissionErr, setSubmissionErr] = useState(null)
     const [showTrailForm, setShowTrailForm] = useState(false)
@@ -27,15 +27,15 @@ export default function ParkForm({park}) {
     const [loadMessage, setLoadMessage] = useState('')
     //Redux
     const trails = useSelector((state) => state.parkForm.trails)
-    const trail = useSelector((state)=>state.parkForm.trail)
+    const trail = useSelector((state) => state.parkForm.trail)
     const dispatch = useDispatch()
 
     //React-router-dom
     const nav = useNavigate()
 
-    const onSubmit = async (data) => {      
+    const onSubmit = async (data) => {
         let res = {}
-        if(!park){
+        if (!park) {
             setLoadMessage('Creating Park')
             res = await (createNewPark(data))
             if (res.error && res.error.status === 409) {
@@ -45,28 +45,29 @@ export default function ParkForm({park}) {
             } else if (res.error) {
                 console.log(res)
                 return
-            }           
-        }else{
-            console.log(park.id)
-            res = await updatePark({id:park.id, ...data})
+            }
+        } else {           
+            setLoadMessage('Updating Park')
+            res = await updatePark({ id: park.id, ...data })
         }
         setLoadMessage('Park Created Successfully')
-        for(let trail of trails){
+        for (let trail of trails) {
             setLoadMessage(`Adding ${trail.name} to ${res.data.name} park`)
-            trail = {...trail, parkId:res.data.id}
+            trail = { ...trail, parkId: res.data.id }
             await addNewTrail(trail)
         }
        
         dispatch(resetForm())
+        dispatch(closeForm())
         nav(`/parks/${res.data.id}`)
-        
+
     }
     //For Google AutoComplete
     const autoCompleteRef = useRef()
     const inputRef = useRef()
     const options = {
         componentRestrictions: { country: 'US' },
-        fields: ['address_components', "reviews","name", 'formatted_phone_number', 'url', 'website'],
+        fields: ['address_components', "reviews", "name", 'formatted_phone_number', 'url', 'website'],
         types: ['park'],
 
     }
@@ -79,14 +80,14 @@ export default function ParkForm({park}) {
             options
         );
         autoCompleteRef.current.addListener("place_changed", async function () {
-            const place = await autoCompleteRef.current.getPlace();            
+            const place = await autoCompleteRef.current.getPlace();
             setValue('name', place.name)
             if (place.address_components.length === 8) {
                 setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
                 setValue('city', place.address_components[3].long_name)
                 setValue('state', place.address_components[5].short_name)
                 setValue('zip', place.address_components[7].long_name)
-            }else if (place.address_components.length === 7) {
+            } else if (place.address_components.length === 7) {
                 setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
                 setValue('city', place.address_components[2].long_name)
                 setValue('state', place.address_components[4].short_name)
@@ -118,7 +119,7 @@ export default function ParkForm({park}) {
 
     return (
         <>
-            {isLoading || updateLoad ? <Loading message={loadMessage}/> :
+            {isLoading || updateLoad || addTrailLoad || deleteTrailLoad ? <Loading message={loadMessage} /> :
 
                 <form onSubmit={handleSubmit(onSubmit)} className='px-5 max-w-[800px] mx-auto text-start'>
                     <div className='mt-3'>
@@ -252,8 +253,8 @@ export default function ParkForm({park}) {
                         </div>
                     </div>
                     <div className='mt-3'>
-                    <h3 className='font-bold text-lg'>Trails</h3>
-                    <hr/>
+                        <h3 className='font-bold text-lg'>Trails</h3>
+                        <hr />
                         <div className=' flex hover:cursor-pointer hover:bg-indigo-100 w-[150px]  py-2 rounded' onClick={() => setShowTrailForm(!showTrailForm)}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-3">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -261,25 +262,32 @@ export default function ParkForm({park}) {
                             <p className='font-bold uppercase'>Add Trail</p>
                         </div>
                         <div className=''>
-                            
-                            {trails &&
-                                trails.map(trail => (
-                                    <div className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
+
+                            {trails.length > 0 &&
+                                <>
+                                <h3 className='font-bold text-lg'>Adding Trails</h3>
+                            {trails.map(trail => (
+                                    <div className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.trailId}>
                                         <p className='font-bold tracking-widest text-lg'>{trail.name}: {trail.length} miles</p>
-                                        <button onClick={()=>dispatch(deleteTrail(trail))} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>
+                                        <button onClick={() => dispatch(deleteTrail(trail))} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>
                                     </div>
-                                ))
+                                    ))}
+                                </>
+
                             }
                             {park &&
-                                park.Trails.map(trail=>(
-                                    <div className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
-                                    <p className='font-bold tracking-widest text-lg'>{trail.name}: {trail.length} miles</p>
-                                    <button onClick={()=>{setShowDeletePopup(true); dispatch(setTrail(trail))}} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>                                                                       
-                                </div>
-                                
-                                ))
+                                <>
+                                    <h2 className='font-bold text-lg'>Current Trails</h2>
+                                    {park.Trails.length > 0 && park.Trails.map(trail => (
+                                        <div className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
+                                            <p className='font-bold tracking-widest text-lg'>{trail.name}: {trail.length} miles</p>
+                                            <button onClick={() => { setShowDeletePopup(true); dispatch(setTrail(trail)) }} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>
+                                        </div>
+                                    ))}
+                                </>
+
                             }
-                             <DeletePopup open={showDeletePopup} setOpen={setShowDeletePopup} subject={`${trail.name}`} onDelete={async()=>await deleteTrailFromDB(trail.id)}/>
+                            <DeletePopup open={showDeletePopup} setOpen={setShowDeletePopup} subject={`${trail.name}`} onDelete={async () => await deleteTrailFromDB(trail.id)} />
                         </div>
 
 

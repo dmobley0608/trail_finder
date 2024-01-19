@@ -6,8 +6,8 @@ const TrailReviews = require("./trailReview");
 
 const Trails = sequelize.define('Trails', {
     id:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
+        type:DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,      
         primaryKey:true,
         unique:true
     },

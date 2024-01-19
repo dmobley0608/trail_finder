@@ -9,3 +9,5 @@
 1/12/2024 - 2 hours - Style parks page
 1/13/2024 - 2 hours - Added review stars and styling adjustments on park page
 1/17/2024 - 8 hours - implemented google maps api for park search, built add trail feature to park form
+1/18/2024 - 6 hours - Update to add park form and park screen
+1/9/2024 - 3 hours - implemented redux park form and implemented add trail from park screen

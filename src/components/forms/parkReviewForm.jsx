@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useAddParkReviewMutation } from '../../redux/parkReviewsApi';
@@ -13,7 +13,7 @@ export default function ParkReviewForm({ park, onComplete, parkReview }) {
     const [addParkReview, { isLoading }] = useAddParkReviewMutation()
 
 
-    const setStarRating = (rating) => {
+    const setStarRating = useCallback((rating) => {
         clearErrors()
         setRating(rating)       
         const stars = document.querySelectorAll('.star')
@@ -26,7 +26,9 @@ export default function ParkReviewForm({ park, onComplete, parkReview }) {
             stars[i].setAttribute('fill', 'gold')
             stars[i].setAttribute('stroke-width', '.75')
         }
-    }
+    }, [clearErrors])
+
+
 
     const onSubmit = async (data) => {
         if (!rating) {
@@ -47,7 +49,7 @@ export default function ParkReviewForm({ park, onComplete, parkReview }) {
             setValue('date', new Date(parkReview.date).toISOString().substring(0, 10))
         }
 
-    }, [])
+    }, [parkReview, setStarRating, setValue])
     return (
         <> {isLoading ? <Loading /> :
             <form onSubmit={handleSubmit(onSubmit)}>

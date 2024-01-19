@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from "react-hook-form"
 
 import Loading from '../../pages/loading/loading';
@@ -65,23 +65,10 @@ export default function ParkForm({ park }) {
     //For Google AutoComplete
     const autoCompleteRef = useRef()
     const inputRef = useRef()
-    const options = {
-        componentRestrictions: { country: 'US' },
-        fields: ['address_components', "reviews", "name", 'formatted_phone_number', 'url', 'website'],
-        types: ['park'],
+   
 
-    }
-
-
-
-    useEffect(() => {
-        autoCompleteRef.current = new window.google.maps.places.Autocomplete(
-            inputRef.current,
-            options
-        );
-        autoCompleteRef.current.addListener("place_changed", async function () {
-            const place = await autoCompleteRef.current.getPlace();
-            setValue('name', place.name)
+   const updateFormRef = useCallback((place)=>{
+    setValue('name', place.name)
             if (place.address_components.length === 8) {
                 setValue('streetAddress', `${place.address_components[0].long_name} ${place.address_components[1].long_name}`)
                 setValue('city', place.address_components[3].long_name)
@@ -108,10 +95,30 @@ export default function ParkForm({ park }) {
 
             setValue('phone', place.formatted_phone_number)
             setValue('url', place.website)
+   },[setValue])
 
-        });
+   const googleMapsField = useCallback(()=>{
+    const options = {
+        componentRestrictions: { country: 'US' },
+        fields: ['address_components', "reviews", "name", 'formatted_phone_number', 'url', 'website'],
+        types: ['park'],
 
-    }, [])
+    }
+    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+        inputRef.current,
+        options
+    );
+    autoCompleteRef.current.addListener("place_changed", async function () {
+        const place = await autoCompleteRef.current.getPlace();
+        updateFormRef(place)
+
+    });
+
+   },[updateFormRef])
+
+    useEffect(() => {
+       googleMapsField()
+    }, [googleMapsField])
 
 
 

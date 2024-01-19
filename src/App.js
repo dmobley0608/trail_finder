@@ -6,8 +6,9 @@ import Register from './pages/register/register';
 import SignIn from './pages/signIn/signIn';
 import Root from './components/navigation/layouts/root/root';
 import Dashboard from './pages/dashboard/dashboard';
-import { useGetUserQuery } from './redux/userAPI';
+
 import Park from './pages/park/park';
+import { useGetUserQuery } from './redux/backendApi';
 
 const AuthUser = ({ children }) => {
   const { data } = useGetUserQuery()

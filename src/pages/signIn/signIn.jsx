@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useLoginMutation } from '../../redux/userAPI'
+
 import Loading from '../loading/loading';
 import logo from '../../static/images/trailFinderLogo.png'
+import { useLoginMutation } from '../../redux/backendApi';
 export default function SignIn() {
   const [login, result] = useLoginMutation();
   const [userInfo, setUserInfo] = useState({})

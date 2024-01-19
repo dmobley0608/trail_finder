@@ -89,7 +89,8 @@ exports.addPark = async (req, res) => {
 
 exports.editPark = async (req, res) => {
     try {
-        //Search For Park   
+        //Search For Park  
+        console.log(req.params) 
         let park = await Park.findByPk(req.params.id)
         //If park does not exist
         if (!park) {
@@ -97,7 +98,7 @@ exports.editPark = async (req, res) => {
             res.status(404).json("Park Not Found")
             return
         }
-        //If Park does exist       
+        //If Park does exist          
         console.log(`Modifying ${park.name} `)
         park = await park.update({ ...req.body })
         console.log(`${park.name} successfully updated`)

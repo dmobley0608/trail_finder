@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useRegisterNewUserMutation } from '../../redux/userAPI'
+
 import Loading from '../loading/loading'
 import logo from '../../static/images/trailFinderLogo.png'
+import { useRegisterNewUserMutation } from '../../redux/backendApi'
 export default function Register() {
     const [user, setUser] = useState({})
     const [error, setError] = useState({ generalError: '', passwordError: '' })

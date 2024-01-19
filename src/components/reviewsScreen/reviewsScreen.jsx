@@ -4,8 +4,9 @@ import ParkReviewCard from '../cards/parkReviewCard'
 import TransitionScreen from '../transitionScreens/transitionScreen'
 import TransitionTitle from '../transitionScreens/transitionTitle'
 import ParkReviewForm from '../forms/parkReviewForm'
-import { useGetParkReviewsQuery } from '../../redux/parkReviewsApi'
+
 import Loading from '../../pages/loading/loading'
+import { useGetParkReviewsQuery } from '../../redux/backendApi'
 
 export default function ReviewsScreen({ open, setOpen, park }) {
     const [openReviewForm, setOpenReviewForm] = useState(false)

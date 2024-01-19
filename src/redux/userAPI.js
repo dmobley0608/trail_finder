@@ -28,7 +28,7 @@ export const usersApi = createApi({
         }),
         logout:builder.query({
             query:()=>'/logout',
-            invalidatesTags:['User']
+            invalidatesTags:['User'] 
         })
     })
 })

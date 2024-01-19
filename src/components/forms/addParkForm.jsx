@@ -6,31 +6,49 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import Popup from '../popup/popup';
 import TrailForm from './trailForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTrail, resetTrails, selectTrails } from '../../redux/parkFormSlice';
-import { useAddTrailToParkMutation } from '../../redux/trailsAPI';
+import { deleteTrail, resetForm, setTrail } from '../../redux/parkFormSlice';
+
+import DeletePopup from '../popup/deletePopup';
+import { useAddTrailToParkMutation, useDeleteTrailFromParkMutation, useUpdateParkByIdMutation } from '../../redux/backendApi';
 
 
-export default function AddParkForm() {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+export default function ParkForm({park}) {
+    //UseForm
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm({defaultValues:park});
+    //API
     const [createNewPark, { isLoading }] = useCreateNewParkMutation()
-    const [addNewTrail] = useAddTrailToParkMutation()
+    const [updatePark, {isLoading:updateLoad}] = useUpdateParkByIdMutation()
+    const [addNewTrail] = useAddTrailToParkMutation()   
+    const [deleteTrailFromDB] = useDeleteTrailFromParkMutation()
+    //React useState
     const [submissionErr, setSubmissionErr] = useState(null)
     const [showTrailForm, setShowTrailForm] = useState(false)
+    const [showDeletePopup, setShowDeletePopup] = useState(false)
     const [loadMessage, setLoadMessage] = useState('')
+    //Redux
     const trails = useSelector((state) => state.parkForm.trails)
+    const trail = useSelector((state)=>state.parkForm.trail)
     const dispatch = useDispatch()
+
+    //React-router-dom
     const nav = useNavigate()
 
-    const onSubmit = async (data) => {
-        setLoadMessage('Creating Park')
-        const res = await (createNewPark(data))
-        if (res.error && res.error.status === 409) {
-            console.log(res)
-            setSubmissionErr({ ...res.error.data.park, message: 'This park is already listed. You can view the page by clicking the link below.' })
-            return
-        } else if (res.error) {
-            console.log(res)
-            return
+    const onSubmit = async (data) => {      
+        let res = {}
+        if(!park){
+            setLoadMessage('Creating Park')
+            res = await (createNewPark(data))
+            if (res.error && res.error.status === 409) {
+                console.log(res)
+                setSubmissionErr({ ...res.error.data.park, message: 'This park is already listed. You can view the page by clicking the link below.' })
+                return
+            } else if (res.error) {
+                console.log(res)
+                return
+            }           
+        }else{
+            console.log(park.id)
+            res = await updatePark({id:park.id, ...data})
         }
         setLoadMessage('Park Created Successfully')
         for(let trail of trails){
@@ -38,7 +56,8 @@ export default function AddParkForm() {
             trail = {...trail, parkId:res.data.id}
             await addNewTrail(trail)
         }
-        dispatch(resetTrails())
+       
+        dispatch(resetForm())
         nav(`/parks/${res.data.id}`)
         
     }
@@ -99,7 +118,7 @@ export default function AddParkForm() {
 
     return (
         <>
-            {isLoading ? <Loading message={loadMessage}/> :
+            {isLoading || updateLoad ? <Loading message={loadMessage}/> :
 
                 <form onSubmit={handleSubmit(onSubmit)} className='px-5 max-w-[800px] mx-auto text-start'>
                     <div className='mt-3'>
@@ -226,29 +245,42 @@ export default function AddParkForm() {
                         </div>
                         <div className='w-full '>
                             <label htmlFor='horseFee' className="block text-sm font-medium leading-6 text-gray-900">Riding Fee</label>
-                            <input id='horseFee' {...register("horseFee", { required: false })}
+                            <input id='horseFee' type='number' {...register("horseFee", { required: false })}
                                 className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
                             />
                             {errors.horseFee && <span>Required</span>}
                         </div>
                     </div>
-                    <div>
-                        <div className='mt-3 flex hover:cursor-pointer hover:bg-indigo-100 w-[150px]  py-2 rounded' onClick={() => setShowTrailForm(!showTrailForm)}>
+                    <div className='mt-3'>
+                    <h3 className='font-bold text-lg'>Trails</h3>
+                    <hr/>
+                        <div className=' flex hover:cursor-pointer hover:bg-indigo-100 w-[150px]  py-2 rounded' onClick={() => setShowTrailForm(!showTrailForm)}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-3">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                             <p className='font-bold uppercase'>Add Trail</p>
                         </div>
-                        <ol className=''>
+                        <div className=''>
+                            
                             {trails &&
                                 trails.map(trail => (
-                                    <li className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
+                                    <div className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
                                         <p className='font-bold tracking-widest text-lg'>{trail.name}: {trail.length} miles</p>
                                         <button onClick={()=>dispatch(deleteTrail(trail))} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>
-                                    </li>
+                                    </div>
                                 ))
                             }
-                        </ol>
+                            {park &&
+                                park.Trails.map(trail=>(
+                                    <div className='flex flex-row-reverse justify-end items-end  shadow-md mb-2 ' key={trail.id}>
+                                    <p className='font-bold tracking-widest text-lg'>{trail.name}: {trail.length} miles</p>
+                                    <button onClick={()=>{setShowDeletePopup(true); dispatch(setTrail(trail))}} type='button' className='mr-5  bg-red-500 p-1 rounded border '>X</button>                                                                       
+                                </div>
+                                
+                                ))
+                            }
+                             <DeletePopup open={showDeletePopup} setOpen={setShowDeletePopup} subject={`${trail.name}`} onDelete={async()=>await deleteTrailFromDB(trail.id)}/>
+                        </div>
 
 
                     </div>

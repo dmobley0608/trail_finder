@@ -100,7 +100,7 @@ export default function ParkForm({ park }) {
    const googleMapsField = useCallback(()=>{
     const options = {
         componentRestrictions: { country: 'US' },
-        fields: ['address_components', "reviews", "name", 'formatted_phone_number', 'url', 'website'],
+        fields: ['address_components', "name", 'formatted_phone_number', 'url', 'website'],
         types: ['park'],
 
     }
